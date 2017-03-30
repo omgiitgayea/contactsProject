@@ -1,0 +1,8 @@
+.contact {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.contactField {
+    width: 20%;
+}
