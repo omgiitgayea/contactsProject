@@ -7,14 +7,20 @@ import {ContactsService} from '../contacts.service';
     styleUrls: ['./contact-items.component.css']
 })
 export class ContactItemsComponent implements OnInit {
-    @Input() public contactKey: string;
+    @Input() public searchParam: string;
+    @Input() public isContactKey: boolean;
     private currentContact: any;
 
     constructor(private _contactService: ContactsService) {
     }
 
     ngOnInit() {
-        this.currentContact = this._contactService.getContactByKey(this.contactKey);
+        if (this.isContactKey) {
+            this.currentContact = this._contactService.getContactByKey(this.searchParam);
+        }
+        else {
+            this.currentContact = this._contactService.getContactByParam(this.searchParam);
+        }
     }
 
 }

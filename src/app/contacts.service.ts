@@ -12,6 +12,7 @@ export class ContactsService {
 
     constructor() {
     }
+
     getContactByKey(contactKey: string): any {
         let myContact: any = null;
         // this.myContacts.forEach((contact) => {
@@ -28,4 +29,13 @@ export class ContactsService {
         return myContact;
     };
 
+    getContactByParam(parameter: string): any {
+        let myContact: any = null;
+        return myContact;
+    }
+
+    // will make a contact class
+    addContact(newContact: any): void {
+        this.myContacts.push(newContact);
+    }
 }

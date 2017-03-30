@@ -9,20 +9,27 @@ import {ContactItemsComponent} from './contact-items/contact-items.component';
 import {ContactsService} from './contacts.service';
 import {NoPageComponent} from './no-page/no-page.component';
 import {RouterModule} from '@angular/router';
+import { FindContactComponent } from './find-contact/find-contact.component';
+import { AddContactComponent } from './add-contact/add-contact.component';
 
 @NgModule({
     declarations: [
         AppComponent,
         ContactsComponent,
         ContactItemsComponent,
-        NoPageComponent
+        NoPageComponent,
+        FindContactComponent,
+        AddContactComponent
     ],
     imports: [
         BrowserModule,
         FormsModule,
         HttpModule,
         RouterModule.forRoot([
-            {path: '', component: ContactsComponent},
+            {path: 'findContact', component: FindContactComponent},
+            {path: 'addContact', component: AddContactComponent},
+            {path: 'fullList', component: ContactsComponent},
+            {path: '', component: NoPageComponent},
             {path: '**', component: NoPageComponent}
         ])
     ],
