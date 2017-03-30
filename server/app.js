@@ -1,6 +1,8 @@
 /**
  * Created by GodaiYuusaku on 3/30/17.
  */
+const contactServ = require("contactsService");
+const contactRepo = require("contactsRepository");
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
