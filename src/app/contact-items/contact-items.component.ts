@@ -9,18 +9,19 @@ import {ContactsService} from '../contacts.service';
 export class ContactItemsComponent implements OnInit {
     @Input() public searchParam: string;
     @Input() public isContactKey: boolean;
-    private currentContact: any;
+    @Input() public contact: any;
+    // private currentContact: any;
 
     constructor(private _contactService: ContactsService) {
     }
 
     ngOnInit() {
-        if (this.isContactKey) {
-            this.currentContact = this._contactService.getContactByKey(this.searchParam);
-        }
-        else {
-            this.currentContact = this._contactService.getContactByParam(this.searchParam);
-        }
+        // if (this.isContactKey) {
+        //     this.currentContact = this._contactService.getContactByKey(this.searchParam);
+        // }
+        // else {
+        //     this.currentContact = this._contactService.getContactByParam(this.searchParam);
+        // }
     }
 
 }

@@ -1,5 +1,5 @@
 <div>
     <div *ngFor="let contact of myContacts">
-        <app-contact-items [searchParam]="contact.contactKey" [isContactKey]="true"></app-contact-items>
+        <app-contact-items [searchParam]="contact.contactKey" [isContactKey]="true" [contact]="contact"></app-contact-items>
     </div>
 </div>

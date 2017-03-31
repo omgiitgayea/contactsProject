@@ -1,12 +1,13 @@
 /**
  * Created by GodaiYuusaku on 3/30/17.
  */
-const contactServ = require("contactsService");
-const contactRepo = require("contactsRepository");
+const contactServ = require("./contactsService");
 const express = require("express");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false
@@ -18,6 +19,12 @@ app.listen(3000, () => {
 
 app.use(express.static("public"));
 
-app.post("/loggedIn", (req, res) => {
-    console.log(req.body);
+app.get("/getAllContacts", (req, res) => {
+    res.send(contactServ.getAllContacts());
+});
+
+app.post("/findContact", (req, res) => {
+    console.log(req.body.parameter);
+    res.send(req.body.parameter);
+
 });
