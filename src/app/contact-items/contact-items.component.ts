@@ -27,6 +27,6 @@ export class ContactItemsComponent implements OnInit {
     }
     saveNewDetails(key) {
         this.editing = false;
-        console.log(`Save ${key}`);
+        this._contactService.editContact(this.contact);
     }
 }

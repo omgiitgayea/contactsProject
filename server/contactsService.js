@@ -29,6 +29,16 @@ function addContact(newContact) {
     return newContact;
 }
 
+function editContact(changedContact) {
+    contactRepo.updateContacts(changedContact);
+}
+
+function deleteContact(nixedContactID) {
+
+}
+
 exports.getAllContacts = getAllContacts;
 exports.addContacts = addContact;
 exports.findContact = findContact;
+exports.editContact = editContact;
+exports.deleteContact = deleteContact;

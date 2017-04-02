@@ -46,8 +46,19 @@ function getNewID() {
         getNewID();
     }
 }
+
+function updateContacts(updatedContact) {
+    for (let i = 0; i < myContacts.length; i++) {
+        if (updatedContact.contactKey === myContacts[i].contactKey) {
+            myContacts[i] = updatedContact;
+            break;
+        }
+    }
+}
+
 exports.addContact = addContact;
 exports.getNewID = getNewID;
+exports.updateContacts = updateContacts;
 //
 // var module;
 // module.exports = {};

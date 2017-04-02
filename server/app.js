@@ -38,4 +38,7 @@ app.put("/addContact", (req, res) => {
 
 // app.delete();
 
-// app.put("/editContact")
+app.put("/editContact", (req, res) => {
+    contactServ.editContact(req.body.parameter);
+    res.send(req.body.parameter);
+});
