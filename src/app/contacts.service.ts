@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
 import {Observable, Subject} from 'rxjs';
+import {Contact} from './contact';
 
 @Injectable()
 export class ContactsService {
@@ -15,16 +16,19 @@ export class ContactsService {
     fullContactListSub = new Subject<any>();
     fullContactListSub$ = this.fullContactListSub.asObservable();
 
+    private newContact: any;
+    newContactSub = new Subject<any>();
+    newContactSub$ = this.newContactSub.asObservable();
+
+    private searchResults: any;
+    searchResultsSub = new Subject<any>();
+    searchResultsSub$ = this.searchResultsSub.asObservable();
+
     constructor(private http: Http) {
     }
 
     getContactByKey(contactKey: string): any {
         let myContact: any = null;
-        // this.myContacts.forEach((contact) => {
-        //     if (contact.contactKey === contactKey) {
-        //         myContact = contact;
-        //     }
-        // });
         for (let i = 0; i < this.myContacts.length; i++) {
             if (this.myContacts[i].contactKey === contactKey) {
                 myContact = this.myContacts[i];
@@ -36,16 +40,6 @@ export class ContactsService {
         return myContact;
     };
 
-    getContactByParam(parameter: string): any {
-        let myContact: any = null;
-        return myContact;
-    }
-
-    // will make a contact class
-    addContact(newContact: any): void {
-        this.myContacts.push(newContact);
-    }
-
     getAllContacts(): Promise<any> {
         return this.http.get(`${this.baseUrl}/getAllContacts`)
             .toPromise()
@@ -56,12 +50,39 @@ export class ContactsService {
             .catch((error: any) => Observable.throw(error));
     }
 
-    // findContact(parameters: any): void {
-    //     console.log(parameters + ' from component');
-    // }
     findContact(parameters: any): Promise<any> {
         return this.http
             .post(`${this.baseUrl}/findContact`, {parameter: parameters})
+            .toPromise()
+            .then(response => {
+                this.searchResults = response.json();
+                this.searchResultsSub.next(this.searchResults);
+            })
+            .catch((error: any) => Observable.throw(error));
+    }
+
+    addContact(newContact: Contact): Promise<any> {
+        return this.http
+            .put(`${this.baseUrl}/addContact`, {parameter: newContact})
+            .toPromise()
+            .then(response => {
+                this.newContact = response.json();
+                this.newContactSub.next(this.newContact);
+            })
+            .catch((error: any) => Observable.throw(error));
+    }
+
+    deleteContact(nixedContact: Contact): Promise<any> {
+        return this.http
+            .delete(`${this.baseUrl}`)
+            .toPromise()
+            .then(() => {})
+            .catch((error: any) => Observable.throw(error));
+    }
+
+    editContact(changedContact: Contact): Promise<any> {
+        return this.http
+            .put(`${this.baseUrl}/editContact`, {parameter: changedContact})
             .toPromise()
             .then(response => {
                 console.log(response.json());

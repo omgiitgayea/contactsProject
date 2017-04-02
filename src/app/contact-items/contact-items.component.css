@@ -6,3 +6,11 @@
 .contactField {
     width: 20%;
 }
+
+.bluePencil {
+    color: dodgerblue;
+}
+
+.redX {
+    color: firebrick;
+}

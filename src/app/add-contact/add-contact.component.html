@@ -1,3 +1,15 @@
-<p>
-  add-contact works!
-</p>
+<div>
+    <label>
+        First Name
+        <input [(ngModel)]="firstName" type="text">
+    </label>
+    <label>
+        Last Name
+        <input [(ngModel)]="lastName" type="text">
+    </label>
+    <button (click)="addContact()">Add me!</button>
+</div>
+<div *ngIf="newContact">
+    Hooray! You just successfully added this new contact!
+    <app-contact-items [contact]="newContact"></app-contact-items>
+</div>

@@ -11,6 +11,7 @@ import {NoPageComponent} from './no-page/no-page.component';
 import {RouterModule} from '@angular/router';
 import { FindContactComponent } from './find-contact/find-contact.component';
 import { AddContactComponent } from './add-contact/add-contact.component';
+import { StartComponent } from './start/start.component';
 
 @NgModule({
     declarations: [
@@ -19,7 +20,8 @@ import { AddContactComponent } from './add-contact/add-contact.component';
         ContactItemsComponent,
         NoPageComponent,
         FindContactComponent,
-        AddContactComponent
+        AddContactComponent,
+        StartComponent
     ],
     imports: [
         BrowserModule,
@@ -29,7 +31,7 @@ import { AddContactComponent } from './add-contact/add-contact.component';
             {path: 'findContact', component: FindContactComponent},
             {path: 'addContact', component: AddContactComponent},
             {path: 'fullList', component: ContactsComponent},
-            {path: '', component: NoPageComponent},
+            {path: '', component: StartComponent},
             {path: '**', component: NoPageComponent}
         ])
     ],

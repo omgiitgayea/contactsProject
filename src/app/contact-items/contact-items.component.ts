@@ -10,18 +10,23 @@ export class ContactItemsComponent implements OnInit {
     @Input() public searchParam: string;
     @Input() public isContactKey: boolean;
     @Input() public contact: any;
-    // private currentContact: any;
+    editing: boolean;
 
     constructor(private _contactService: ContactsService) {
     }
 
     ngOnInit() {
-        // if (this.isContactKey) {
-        //     this.currentContact = this._contactService.getContactByKey(this.searchParam);
-        // }
-        // else {
-        //     this.currentContact = this._contactService.getContactByParam(this.searchParam);
-        // }
+        this.editing = false;
     }
 
+    editContact() {
+        this.editing = true;
+    }
+    deleteContact(key) {
+        console.log(`Delete ${key}`);
+    }
+    saveNewDetails(key) {
+        this.editing = false;
+        console.log(`Save ${key}`);
+    }
 }

@@ -1,11 +1,18 @@
 <div>
     <label>
         First Name
-        <input [(ngModel)]="firstName" type="text">
+        <input [(ngModel)]="firstName" (keyup)="autoComplete($event)" type="text">
     </label>
     <label>
         Last Name
-        <input [(ngModel)]="lastName" type="text">
+        <input [(ngModel)]="lastName" (keyup)="autoComplete($event)" type="text">
     </label>
-    <button (click)="findContact()">Find me!</button>
+    <button (click)="clearFields()">Clear Fields</button>
+</div>
+<div *ngIf="searchResults">
+    We have found these contacts:
+    <div *ngIf="searchResults.length == 0">No such contact</div>
+    <div *ngFor="let contact of searchResults">
+        <app-contact-items [contact]="contact"></app-contact-items>
+    </div>
 </div>

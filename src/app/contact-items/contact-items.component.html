@@ -1,4 +1,21 @@
-<div *ngIf="contact" class="contact">
-    <div class="contactField">First Name: {{contact.firstName}}</div>
-    <div class="contactField">Last Name: {{contact.lastName}}</div>
+<div [ngSwitch]="editing">
+    <div *ngSwitchCase="false" class="contact">
+        <div class="contactField">First Name: {{contact.firstName}}</div>
+        <div class="contactField">Last Name: {{contact.lastName}}</div>
+        <div class="contactField">Contact ID: {{contact.contactKey}}</div>
+        <i class="fa fa-pencil bluePencil" (click)="editContact()">&nbsp;</i>
+        <i class="fa fa-times-circle-o redX" (click)="deleteContact(contact.contactKey)"></i>
+    </div>
+
+    <div *ngSwitchDefault class="contact">
+        <label class="contactField">
+            First Name
+            <input [(ngModel)]="contact.firstName" type="text">
+        </label>
+        <label class="contactField">
+            Last Name
+            <input [(ngModel)]="contact.lastName" type="text">
+        </label>
+        <button (click)="saveNewDetails(contact.contactKey)">Save</button>
+    </div>
 </div>
