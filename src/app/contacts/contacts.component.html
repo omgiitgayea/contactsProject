@@ -1,4 +1,5 @@
 <div>
+    <app-contact-header></app-contact-header>
     <div *ngFor="let contact of myContacts">
         <app-contact-items [searchParam]="contact.contactKey" [isContactKey]="true" [contact]="contact"></app-contact-items>
     </div>

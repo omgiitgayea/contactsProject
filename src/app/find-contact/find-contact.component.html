@@ -12,6 +12,7 @@
 <div *ngIf="searchResults">
     We have found these contacts:
     <div *ngIf="searchResults.length == 0">No such contact</div>
+    <app-contact-header *ngIf="searchResults.length != 0"></app-contact-header>
     <div *ngFor="let contact of searchResults">
         <app-contact-items [contact]="contact"></app-contact-items>
     </div>

@@ -1,0 +1,7 @@
+<div class="header">
+    <div class="headerTitle" *ngFor="let title of fields" (click)="sort(title.fieldName)">
+        {{title.fieldName}}
+        <i class="fa fa-angle-up" *ngIf="title.currentSort && !title.reverseOrder"></i>
+        <i class="fa fa-angle-down" *ngIf="title.currentSort && title.reverseOrder"></i>
+    </div>
+</div>

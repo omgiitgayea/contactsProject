@@ -12,6 +12,7 @@ import {RouterModule} from '@angular/router';
 import { FindContactComponent } from './find-contact/find-contact.component';
 import { AddContactComponent } from './add-contact/add-contact.component';
 import { StartComponent } from './start/start.component';
+import { ContactHeaderComponent } from './contact-header/contact-header.component';
 
 @NgModule({
     declarations: [
@@ -21,7 +22,8 @@ import { StartComponent } from './start/start.component';
         NoPageComponent,
         FindContactComponent,
         AddContactComponent,
-        StartComponent
+        StartComponent,
+        ContactHeaderComponent
     ],
     imports: [
         BrowserModule,
