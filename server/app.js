@@ -20,23 +20,23 @@ app.listen(3000, () => {
 app.use(express.static("public"));
 
 // more or less done
-app.get("/getAllContacts", (req, res) => {
-    res.send(contactServ.getAllContacts());
-});
+app.route("/contacts")
+    .get((req, res) => {
+        res.send(contactServ.getAllContacts());
+    })
+    .post((req, res) => {
+        let results = contactServ.findContact(req.body.parameter);
+        res.send(results);
+    })
+    .put((req, res) => {
+        let newContact = contactServ.addContacts(req.body.parameter);
+        res.send(newContact);
+    });
 
-// more or less done
-app.post("/findContact", (req, res) => {
-    let results = contactServ.findContact(req.body.parameter);
-    res.send(results);
+app.delete("/contacts/:key", (req, res) => {
+    contactServ.deleteContact(req.params.key);
+    res.send(req.params.key);
 });
-
-// more or less done
-app.put("/addContact", (req, res) => {
-    let newContact = contactServ.addContacts(req.body.parameter);
-    res.send(newContact);
-});
-
-// app.delete();
 
 app.put("/editContact", (req, res) => {
     contactServ.editContact(req.body.parameter);

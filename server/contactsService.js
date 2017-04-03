@@ -2,20 +2,17 @@
  * Created by GodaiYuusaku on 3/30/17.
  */
 const contactRepo = require('./contactsRepository');
+const KEY_SIZE = 5;
+
 function getAllContacts() {
-    // console.log(contactRepo.sendContacts());
-    return contactRepo.sendContacts();
+    let allContactsJSON = contactRepo.readContactFile();
+    let allContacts = JSON.parse(allContactsJSON).contacts;
+    return allContacts;
 }
 
-// search logic isn't complete yet
 function findContact(parameter) {
     let allContacts = getAllContacts();
     let foundContacts = [];
-    // for (let i = 0; i < allContacts.length; i++) {
-    //     if (allContacts[i].firstName.toLowerCase().indexOf(parameter.firstName.toLowerCase()) != -1 && allContacts[i].lastName.toLowerCase().indexOf(parameter.lastName.toLowerCase()) != -1) {
-    //         foundContacts.push(allContacts[i]);
-    //     }
-    // }
     foundContacts = allContacts.filter((contact) => {
         return (contact.firstName.toLowerCase().indexOf(parameter.firstName.toLowerCase()) != -1 && contact.lastName.toLowerCase().indexOf(parameter.lastName.toLowerCase()) != -1)
 
@@ -24,17 +21,57 @@ function findContact(parameter) {
 }
 
 function addContact(newContact) {
-    newContact.contactKey = contactRepo.getNewID();
-    contactRepo.addContact(newContact);
+    let allContacts = getAllContacts();
+    newContact.contactKey = getNewID(allContacts);
+    allContacts.push(newContact);
+    contactRepo.writeContactFile(allContacts);
     return newContact;
 }
 
 function editContact(changedContact) {
-    contactRepo.updateContacts(changedContact);
+    let allContacts = getAllContacts();
+    for (let i = 0; i < allContacts.length; i++) {
+        if (changedContact.contactKey === allContacts[i].contactKey) {
+            allContacts[i] = changedContact;
+            break;
+        }
+    }
+    contactRepo.writeContactFile(allContacts);
 }
 
 function deleteContact(nixedContactID) {
+    let allContacts = getAllContacts();
+    allContacts = allContacts.filter((contact) => {
+        return contact.contactKey !== nixedContactID;
+    });
+    contactRepo.writeContactFile(allContacts);
+}
 
+function makeID() {
+    let text = "";
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (let i = 0; i < KEY_SIZE; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
+function getNewID(allContacts) {
+    let newID = makeID();
+    let isNew = true;
+    for (let i = 0; i < allContacts.length; i++) {
+        if(newID === allContacts[i].contactKey) {
+            isNew = false;
+        }
+    }
+    if (isNew) {
+        return newID;
+    }
+    else {
+        console.log("Wow, a duplicate....");
+        getNewID();
+    }
 }
 
 exports.getAllContacts = getAllContacts;

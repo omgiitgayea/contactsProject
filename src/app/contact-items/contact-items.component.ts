@@ -24,6 +24,7 @@ export class ContactItemsComponent implements OnInit {
     }
     deleteContact(key) {
         console.log(`Delete ${key}`);
+        this._contactService.deleteContact(key);
     }
     saveNewDetails(key) {
         this.editing = false;

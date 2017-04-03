@@ -41,7 +41,7 @@ export class ContactsService {
     };
 
     getAllContacts(): Promise<any> {
-        return this.http.get(`${this.baseUrl}/getAllContacts`)
+        return this.http.get(`${this.baseUrl}/contacts`)
             .toPromise()
             .then(response => {
                 this.fullContactList = response.json();
@@ -52,7 +52,7 @@ export class ContactsService {
 
     findContact(parameters: any): Promise<any> {
         return this.http
-            .post(`${this.baseUrl}/findContact`, {parameter: parameters})
+            .post(`${this.baseUrl}/contacts`, {parameter: parameters})
             .toPromise()
             .then(response => {
                 this.searchResults = response.json();
@@ -63,7 +63,7 @@ export class ContactsService {
 
     addContact(newContact: Contact): Promise<any> {
         return this.http
-            .put(`${this.baseUrl}/addContact`, {parameter: newContact})
+            .put(`${this.baseUrl}/contacts`, {parameter: newContact})
             .toPromise()
             .then(response => {
                 this.newContact = response.json();
@@ -72,11 +72,14 @@ export class ContactsService {
             .catch((error: any) => Observable.throw(error));
     }
 
-    deleteContact(nixedContact: Contact): Promise<any> {
+    deleteContact(nixedContactKey: string): Promise<any> {
         return this.http
-            .delete(`${this.baseUrl}`)
+            .delete(`${this.baseUrl}/contacts/${nixedContactKey}`)
             .toPromise()
-            .then(() => {})
+            .then((response) => {
+                this.getAllContacts();
+                console.log(response);
+            })
             .catch((error: any) => Observable.throw(error));
     }
 
