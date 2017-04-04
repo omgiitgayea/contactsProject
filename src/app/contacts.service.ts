@@ -24,6 +24,9 @@ export class ContactsService {
     searchResultsSub = new Subject<any>();
     searchResultsSub$ = this.searchResultsSub.asObservable();
 
+    redoSearchSub = new Subject<any>();
+    redoSearchSub$ = this.redoSearchSub.asObservable();
+
     constructor(private http: Http) {
     }
 
@@ -78,6 +81,7 @@ export class ContactsService {
             .toPromise()
             .then((response) => {
                 this.getAllContacts();
+                this.redoSearchSub.next();
                 console.log(response);
             })
             .catch((error: any) => Observable.throw(error));
@@ -87,13 +91,10 @@ export class ContactsService {
         return this.http
             .put(`${this.baseUrl}/editContact`, {parameter: changedContact})
             .toPromise()
-            .then(response => {
-                console.log(response.json());
-            })
+            .then(() => {})
             .catch((error: any) => Observable.throw(error));
     }
 
-    // this will become a post (maybe get with an option?) request, although again, the problem is the search array...
     sortContact(fieldName: string, reverseOrder: boolean): Promise<any> {
         return this.http
             .put(`${this.baseUrl}/sortContacts`, {parameter: {fieldName: fieldName, reverseOrder: reverseOrder}})
@@ -101,6 +102,23 @@ export class ContactsService {
             .then((response) => {
                 this.fullContactList = response.json();
                 this.fullContactListSub.next(this.fullContactList);
+            })
+            .catch((error: any) => Observable.throw(error));
+    }
+
+    sortSearch(fieldName: string, reverseOrder: boolean, params: Contact): Promise<any> {
+        return this.http
+            .put(`${this.baseUrl}/sortSearch`, {
+                parameter: {
+                    fieldName: fieldName,
+                    reverseOrder: reverseOrder,
+                    search: params
+                }
+            })
+            .toPromise()
+            .then((response) => {
+                this.searchResults = response.json();
+                this.searchResultsSub.next(this.searchResults);
             })
             .catch((error: any) => Observable.throw(error));
     }

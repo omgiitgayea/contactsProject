@@ -1,0 +1,16 @@
+.header {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.headerTitle {
+    width: 20%;
+    cursor: pointer;
+}
+
+i {
+    font-size: 10px;
+    font-weight: bold;
+    /*a border is nice, just not quite this one*/
+    /*border: solid 1px black;*/
+}

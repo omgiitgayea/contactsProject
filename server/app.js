@@ -47,3 +47,8 @@ app.put("/sortContacts", (req, res) => {
     let sortedArray = contactServ.sortContacts(req.body.parameter);
     res.send(sortedArray)
 });
+
+app.put("/sortSearch", (req, res) => {
+    let sortedSearchArray = contactServ.sortSearch(req.body.parameter);
+    res.send(sortedSearchArray);
+});

@@ -12,7 +12,7 @@ function getAllContacts() {
 
 function findContact(parameter) {
     let allContacts = getAllContacts();
-    let foundContacts = [];
+    let foundContacts;
     foundContacts = allContacts.filter((contact) => {
         return (contact.firstName.toLowerCase().indexOf(parameter.firstName.toLowerCase()) != -1 && contact.lastName.toLowerCase().indexOf(parameter.lastName.toLowerCase()) != -1)
 
@@ -74,8 +74,15 @@ function getNewID(allContacts) {
     }
 }
 
-function sortContacts(sortParams) {
-    let allContacts = getAllContacts();
+function sortContacts(sortParams, sortArray = []) {
+    let allContacts;
+    if (sortArray.length === 0) {
+        allContacts = getAllContacts();
+    }
+    else {
+        allContacts = sortArray;
+    }
+
     if (sortParams.fieldName === "First Name") {
         if(sortParams.reverseOrder) {
             allContacts.sort((a, b) => {
@@ -103,9 +110,16 @@ function sortContacts(sortParams) {
     return(allContacts);
 }
 
+function sortSearch(sortSearchParams) {
+    let foundContacts = findContact(sortSearchParams.search);
+    let sortedContacts = sortContacts(sortSearchParams, foundContacts);
+    return sortedContacts;
+}
+
 exports.getAllContacts = getAllContacts;
 exports.addContacts = addContact;
 exports.findContact = findContact;
 exports.editContact = editContact;
 exports.deleteContact = deleteContact;
 exports.sortContacts = sortContacts;
+exports.sortSearch = sortSearch;
