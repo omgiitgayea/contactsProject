@@ -79,24 +79,24 @@ function sortContacts(sortParams) {
     if (sortParams.fieldName === "First Name") {
         if(sortParams.reverseOrder) {
             allContacts.sort((a, b) => {
-                return (a.firstName < b.firstName);
+                return (a.firstName.toLowerCase() < b.firstName.toLowerCase()) ? 1 : ((b.firstName.toLowerCase() < a.firstName.toLowerCase()) ? -1 : 0);
             });
         }
         else {
             allContacts.sort((a, b) => {
-                return (a.firstName > b.firstName);
+                return (a.firstName.toLowerCase() > b.firstName.toLowerCase()) ? 1 : ((b.firstName.toLowerCase() > a.firstName.toLowerCase()) ? -1 : 0);
             });
         }
     }
     else {
         if(sortParams.reverseOrder) {
             allContacts.sort((a, b) => {
-                return (a.lastName < b.lastName);
+                return (a.lastName.toLowerCase() < b.lastName.toLowerCase()) ? 1 : ((b.lastName.toLowerCase() < a.lastName.toLowerCase()) ? -1 : 0);
             });
         }
         else {
             allContacts.sort((a, b) => {
-                return (a.lastName > b.lastName);
+                return (a.lastName.toLowerCase() > b.lastName.toLowerCase()) ? 1 : ((b.lastName.toLowerCase() > a.lastName.toLowerCase()) ? -1 : 0);
             });
         }
     }
