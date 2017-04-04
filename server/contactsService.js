@@ -61,7 +61,7 @@ function getNewID(allContacts) {
     let newID = makeID();
     let isNew = true;
     for (let i = 0; i < allContacts.length; i++) {
-        if(newID === allContacts[i].contactKey) {
+        if (newID === allContacts[i].contactKey) {
             isNew = false;
         }
     }
@@ -74,8 +74,38 @@ function getNewID(allContacts) {
     }
 }
 
+function sortContacts(sortParams) {
+    let allContacts = getAllContacts();
+    if (sortParams.fieldName === "First Name") {
+        if(sortParams.reverseOrder) {
+            allContacts.sort((a, b) => {
+                return (a.firstName < b.firstName);
+            });
+        }
+        else {
+            allContacts.sort((a, b) => {
+                return (a.firstName > b.firstName);
+            });
+        }
+    }
+    else {
+        if(sortParams.reverseOrder) {
+            allContacts.sort((a, b) => {
+                return (a.lastName < b.lastName);
+            });
+        }
+        else {
+            allContacts.sort((a, b) => {
+                return (a.lastName > b.lastName);
+            });
+        }
+    }
+    return(allContacts);
+}
+
 exports.getAllContacts = getAllContacts;
 exports.addContacts = addContact;
 exports.findContact = findContact;
 exports.editContact = editContact;
 exports.deleteContact = deleteContact;
+exports.sortContacts = sortContacts;

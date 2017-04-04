@@ -92,4 +92,16 @@ export class ContactsService {
             })
             .catch((error: any) => Observable.throw(error));
     }
+
+    // this will become a post (maybe get with an option?) request, although again, the problem is the search array...
+    sortContact(fieldName: string, reverseOrder: boolean): Promise<any> {
+        return this.http
+            .put(`${this.baseUrl}/sortContacts`, {parameter: {fieldName: fieldName, reverseOrder: reverseOrder}})
+            .toPromise()
+            .then((response) => {
+                this.fullContactList = response.json();
+                this.fullContactListSub.next(this.fullContactList);
+            })
+            .catch((error: any) => Observable.throw(error));
+    }
 }

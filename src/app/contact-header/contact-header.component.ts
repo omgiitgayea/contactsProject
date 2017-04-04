@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {ContactsService} from "../contacts.service";
 
 @Component({
     selector: 'app-contact-header',
@@ -18,7 +19,7 @@ export class ContactHeaderComponent implements OnInit {
         }
     ];
 
-    constructor() {
+    constructor(private _contactsService: ContactsService) {
     }
 
     ngOnInit() {
@@ -38,6 +39,7 @@ export class ContactHeaderComponent implements OnInit {
                 else {
                     this.fields[i].currentSort = true;
                 }
+                this._contactsService.sortContact(this.fields[i].fieldName, this.fields[i].reverseOrder);
             }
             else {
                 this.fields[i].currentSort = false;
