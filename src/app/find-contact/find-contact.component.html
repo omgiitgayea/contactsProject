@@ -1,16 +1,16 @@
-<div>
-    <label>
-        First Name
+<div class="inputArea">
+    <label class="inputField">
+        <span>First Name</span>
         <input [(ngModel)]="firstName" (keyup)="autoComplete($event)" type="text">
     </label>
-    <label>
-        Last Name
+    <label class="inputField">
+        <span>Last Name</span>
         <input [(ngModel)]="lastName" (keyup)="autoComplete($event)" type="text">
     </label>
-    <button (click)="clearFields()">Clear Fields</button>
+    <button class="myButton" (click)="clearFields()">Clear Fields</button>
 </div>
 <div *ngIf="searchResults">
-    We have found these contacts:
+    <!--We have found these contacts:-->
     <div *ngIf="searchResults.length == 0">No such contact</div>
     <div class="header" *ngIf="searchResults.length != 0">
         <div class="headerTitle" *ngFor="let title of fields" (click)="sort(title.fieldName)">
@@ -18,8 +18,9 @@
             <i class="fa fa-angle-up" *ngIf="title.currentSort && !title.reverseOrder"></i>
             <i class="fa fa-angle-down" *ngIf="title.currentSort && title.reverseOrder"></i>
         </div>
-    </div>
 
+    </div>
+    <div class="sectionLine" *ngIf="searchResults.length != 0"></div>
     <div *ngFor="let contact of searchResults">
         <app-contact-items [contact]="contact"></app-contact-items>
     </div>

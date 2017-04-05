@@ -1,1 +1,46 @@
+.jeanExplained {
+    margin: 20px 0;
+}
 
+.sponsor {
+    width: 50%;
+    padding: 10px;
+    margin: 10px auto;
+    border-radius: 5px;
+    box-shadow: 5px 5px 5px black;
+    background-color: rgba(20, 20, 20, 0.2);
+}
+
+.sponsorContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.sponsorTitle {
+    margin-right: 30px;
+}
+.eImage {
+    background-image: url("../../images/express.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 160px;
+    height: 36px;
+}
+
+.aImage {
+    background-image: url("../../images/angular.png");
+    width: 63px;
+    height: 63px;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.nImage {
+    background-image: url("../../images/nodejs.png");
+    width: 200px;
+    height: 54px;
+    background-size: cover;
+    background-repeat: no-repeat;
+}

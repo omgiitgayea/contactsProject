@@ -9,8 +9,9 @@ import {Subscription} from "rxjs";
     styleUrls: ['./add-contact.component.css']
 })
 export class AddContactComponent implements OnInit {
-    firstName: string = '';
-    lastName: string = '';
+    firstName = '';
+    lastName = '';
+    error = false;
     newContact: any;
     newContactSubscription: Subscription;
     constructor(private _contactsService: ContactsService) {
@@ -23,9 +24,15 @@ export class AddContactComponent implements OnInit {
     ngOnInit() {
     }
     addContact(): void {
-        let newContact: Contact = new Contact(this.firstName, this.lastName);
-        this._contactsService.addContact(newContact);
-        this.firstName = '';
-        this.lastName = '';
+        if ((this.firstName === '') && (this.lastName === '')) {
+            this.error = true;
+        }
+        else {
+            const newContact: Contact = new Contact(this.firstName, this.lastName);
+            this._contactsService.addContact(newContact);
+            this.firstName = '';
+            this.lastName = '';
+            this.error = false;
+        }
     }
 }

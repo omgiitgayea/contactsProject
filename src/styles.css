@@ -4,6 +4,6 @@ body, html {
     padding: 0;
     height: 100%;
     width: 100%;
-    background-color: darkblue;
-    box-sizing: border-box;
+    /*box-sizing: border-box;*/
+    background-image: url("./images/wov.png");
 }

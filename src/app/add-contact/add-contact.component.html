@@ -1,13 +1,16 @@
-<div>
-    <label>
-        First Name
+<div class="inputArea">
+    <label class="inputField">
+        <span>First Name</span>
         <input [(ngModel)]="firstName" type="text">
     </label>
-    <label>
-        Last Name
+    <label class="inputField">
+        <span>Last Name</span>
         <input [(ngModel)]="lastName" type="text">
     </label>
-    <button (click)="addContact()">Add me!</button>
+    <button class="myButton" (click)="addContact()">Add me!</button>
+</div>
+<div *ngIf="error" class="invalidContact">
+    Please fill in at least one field
 </div>
 <div *ngIf="newContact">
     Hooray! You just successfully added this new contact!

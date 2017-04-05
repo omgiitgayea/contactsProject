@@ -1,7 +1,8 @@
 .header {
+    height: 25px;
     display: flex;
-    justify-content: flex-start;
     font-size: 20px;
+    align-items: center;
 }
 
 .headerTitle {
@@ -10,8 +11,16 @@
 }
 
 i {
+    margin: 0;
+    padding: 0 5px;
     font-size: 10px;
     font-weight: bold;
-    /*a border is nice, just not quite this one*/
-    /*border: solid 1px black;*/
+}
+
+.sectionLine {
+    background-color: darkkhaki;
+    width: 100%;
+    height: 2px;
+    box-shadow: 0 1px 1px black;
+    margin: 5px 0;
 }

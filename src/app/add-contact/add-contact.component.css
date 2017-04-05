@@ -1,0 +1,50 @@
+.inputArea {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.inputField {
+    width: 20%;
+}
+
+input {
+    border-radius: 5px;
+    outline: none;
+    padding: 5px;
+}
+
+.inputArea span {
+    margin-right: 5px;
+}
+
+.invalidContact {
+    color: red;
+}
+.myButton {
+    box-shadow: 2px 2px 0px 0px #8a2a21;
+    background: linear-gradient(to bottom, #c62d1f 5%, #f24437 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24437', GradientType=0);
+    background-color: #c62d1f;
+    border-radius: 18px;
+    border: 1px solid #d02718;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 10px;
+    padding: 7px 15px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #810e05;
+    outline: none;
+}
+
+.myButton:hover {
+    background: linear-gradient(to bottom, #f24437 5%, #c62d1f 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24437', endColorstr='#c62d1f', GradientType=0);
+    background-color: #f24437;
+}
+
+.myButton:active {
+    position: relative;
+    top: 1px;
+}
