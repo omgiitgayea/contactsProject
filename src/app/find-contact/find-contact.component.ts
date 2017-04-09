@@ -50,13 +50,16 @@ export class FindContactComponent implements OnInit {
 
     autoComplete(ev: any): void {
         const val = ev.target.value;
-        if (val && val.trim() !== '') {
+        if ((val && val.trim() !== '') || this.firstName !== '' || this.lastName !== '') {
             const searchContact: Contact = new Contact(this.firstName, this.lastName);
             for (let i = 0; i < this.fields.length; i++) {
                 this.fields[i].currentSort = false;
                 this.fields[i].reverseOrder = false;
             }
             this._contactsService.findContact(searchContact);
+        }
+        else {
+            this.searchResults = [];
         }
     }
 

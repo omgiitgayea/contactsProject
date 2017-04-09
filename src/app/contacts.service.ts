@@ -6,12 +6,7 @@ import {Contact} from './contact';
 @Injectable()
 export class ContactsService {
     private baseUrl = 'http://localhost:3000';
-    myContacts = [
-        {firstName: 'Joseph', lastName: 'Gatto', contactKey: 'a1'},
-        {firstName: 'Salvatore', lastName: 'Volcano', contactKey: 'b1'},
-        {firstName: 'Brian', lastName: 'Quinn', contactKey: 'c1'},
-        {firstName: 'James', lastName: 'Murray', contactKey: 'd1'},
-    ];
+
     private fullContactList: any[];
     fullContactListSub = new Subject<any>();
     fullContactListSub$ = this.fullContactListSub.asObservable();
@@ -29,19 +24,6 @@ export class ContactsService {
 
     constructor(private http: Http) {
     }
-
-    getContactByKey(contactKey: string): any {
-        let myContact: any = null;
-        for (let i = 0; i < this.myContacts.length; i++) {
-            if (this.myContacts[i].contactKey === contactKey) {
-                myContact = this.myContacts[i];
-                break;
-            }
-        }
-        // this.http.get(`${this.baseUrl}/aTest`);
-        // this.getAllContacts();
-        return myContact;
-    };
 
     getAllContacts(): Promise<any> {
         return this.http.get(`${this.baseUrl}/contacts`)
@@ -79,10 +61,9 @@ export class ContactsService {
         return this.http
             .delete(`${this.baseUrl}/contacts/${nixedContactKey}`)
             .toPromise()
-            .then((response) => {
+            .then(() => {
                 this.getAllContacts();
                 this.redoSearchSub.next();
-                console.log(response);
             })
             .catch((error: any) => Observable.throw(error));
     }

@@ -1,11 +1,11 @@
 <div class="inputArea">
     <label class="inputField">
         <span>First Name</span>
-        <input [(ngModel)]="firstName" type="text">
+        <input [(ngModel)]="firstName" type="text" (keyup)="enterPressed($event)">
     </label>
     <label class="inputField">
         <span>Last Name</span>
-        <input [(ngModel)]="lastName" type="text">
+        <input [(ngModel)]="lastName" type="text" (keyup)="enterPressed($event)">
     </label>
     <button class="myButton" (click)="addContact()">Add me!</button>
 </div>

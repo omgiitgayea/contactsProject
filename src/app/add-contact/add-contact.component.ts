@@ -23,6 +23,13 @@ export class AddContactComponent implements OnInit {
 
     ngOnInit() {
     }
+
+    enterPressed(event) {
+        if (event.keyCode === 13) {
+            this.addContact();
+        }
+    }
+
     addContact(): void {
         if ((this.firstName === '') && (this.lastName === '')) {
             this.error = true;

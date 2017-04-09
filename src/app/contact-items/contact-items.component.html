@@ -9,12 +9,12 @@
     <div *ngSwitchDefault class="contact">
         <label class="contactField">
             First Name
-            <input [(ngModel)]="contact.firstName" type="text">
+            <input [(ngModel)]="contact.firstName" type="text" (keyup)="enterPressed($event)">
         </label>
         <label class="contactField">
             Last Name
-            <input [(ngModel)]="contact.lastName" type="text">
+            <input [(ngModel)]="contact.lastName" type="text" (keyup)="enterPressed($event)">
         </label>
-        <button (click)="saveNewDetails(contact.contactKey)">Save</button>
+        <button (click)="saveNewDetails()">Save</button>
     </div>
 </div>

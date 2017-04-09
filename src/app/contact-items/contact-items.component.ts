@@ -26,7 +26,13 @@ export class ContactItemsComponent implements OnInit {
         console.log(`Delete ${key}`);
         this._contactService.deleteContact(key);
     }
-    saveNewDetails(key) {
+    enterPressed(event) {
+        if (event.keyCode === 13) {
+            this.saveNewDetails();
+        }
+    }
+
+    saveNewDetails() {
         this.editing = false;
         this._contactService.editContact(this.contact);
     }
