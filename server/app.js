@@ -22,7 +22,9 @@ app.use(express.static("public"));
 // more or less done
 app.route("/contacts")
     .get((req, res) => {
-        res.send(contactServ.getAllContacts());
+        contactServ.getAllContacts((allContacts) => {
+            res.send(allContacts);
+        });
     })
     .post((req, res) => {
         let results = contactServ.findContact(req.body.parameter);

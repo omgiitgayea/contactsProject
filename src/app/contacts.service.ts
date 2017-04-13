@@ -29,6 +29,7 @@ export class ContactsService {
         return this.http.get(`${this.baseUrl}/contacts`)
             .toPromise()
             .then(response => {
+                console.log(response);
                 this.fullContactList = response.json();
                 this.fullContactListSub.next(this.fullContactList);
             })

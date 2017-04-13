@@ -7,20 +7,33 @@ const KEY_SIZE = 5;
 const MongoClient = require('mongodb').MongoClient;
 const url = 'mongodb://localhost:27017/myContacts';
 
-MongoClient.connect(url, (err, db) => {
-    let collection = db.collection('contacts');
-});
-
 function insertContact (db, newContact, callback) {
     let collection = db.collection('contacts');
     collection.insertMany([newContact], (err, result) => {
         callback(result);
     })
 }
-function getAllContacts() {
-    let allContactsJSON = contactRepo.readContactFile();
-    let allContacts = JSON.parse(allContactsJSON).contacts;
-    return allContacts;
+
+function getDBContacts(db, callback) {
+    let collection = db.collection('contacts');
+    collection.find({}).toArray((err, docs) => {
+        callback(docs);
+    })
+
+}
+function getAllContacts(callback) {
+    // let allContacts;
+    MongoClient.connect(url, (err, db) => {
+        getDBContacts(db, (list) => {
+            // allContacts = list;
+            db.close();
+            // console.log(allContacts);
+            callback(list);
+        })
+    });
+    // let allContactsJSON = contactRepo.readContactFile();
+    // let allContacts = JSON.parse(allContactsJSON).contacts;
+    // return allContacts;
 }
 
 function findContact(parameter) {
@@ -34,10 +47,16 @@ function findContact(parameter) {
 }
 
 function addContact(newContact) {
-    let allContacts = getAllContacts();
-    newContact.contactKey = getNewID(allContacts);
-    allContacts.push(newContact);
-    contactRepo.writeContactFile(allContacts);
+    MongoClient.connect(url, (err, db) => {
+        insertContact(db, newContact, () => {
+            console.log(newContact);
+            db.close();
+        })
+    });
+    // let allContacts = getAllContacts();
+    // newContact.contactKey = getNewID(allContacts);
+    // allContacts.push(newContact);
+    // contactRepo.writeContactFile(allContacts);
     return newContact;
 }
 
