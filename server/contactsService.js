@@ -4,6 +4,19 @@
 const contactRepo = require('./contactsRepository');
 const KEY_SIZE = 5;
 
+const MongoClient = require('mongodb').MongoClient;
+const url = 'mongodb://localhost:27017/myContacts';
+
+MongoClient.connect(url, (err, db) => {
+    let collection = db.collection('contacts');
+});
+
+function insertContact (db, newContact, callback) {
+    let collection = db.collection('contacts');
+    collection.insertMany([newContact], (err, result) => {
+        callback(result);
+    })
+}
 function getAllContacts() {
     let allContactsJSON = contactRepo.readContactFile();
     let allContacts = JSON.parse(allContactsJSON).contacts;
