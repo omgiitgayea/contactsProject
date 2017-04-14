@@ -2,8 +2,9 @@
     <div *ngSwitchCase="false" class="contact">
         <div class="contactField">First Name: {{contact.firstName}}</div>
         <div class="contactField">Last Name: {{contact.lastName}}</div>
+        <div class="contactField">ID: {{contact._id}}</div>
         <i class="fa fa-pencil bluePencil" (click)="editContact()">&nbsp;</i>
-        <i class="fa fa-times-circle-o redX" (click)="deleteContact(contact.contactKey)"></i>
+        <i class="fa fa-times-circle-o redX" (click)="deleteContact(contact._id)"></i>
     </div>
 
     <div *ngSwitchDefault class="contact">

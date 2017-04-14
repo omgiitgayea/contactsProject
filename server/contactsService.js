@@ -14,49 +14,38 @@ function insertContact (db, newContact, callback) {
     })
 }
 
-function getDBContacts(db, callback) {
+function getDBContacts(db, searchParams = null, callback) {
     let collection = db.collection('contacts');
-    collection.find({}).toArray((err, docs) => {
+    collection.find(searchParams).toArray((err, docs) => {
         callback(docs);
     })
 
 }
+
 function getAllContacts(callback) {
-    // let allContacts;
     MongoClient.connect(url, (err, db) => {
-        getDBContacts(db, (list) => {
-            // allContacts = list;
+        getDBContacts(db, null, (list) => {
             db.close();
-            // console.log(allContacts);
             callback(list);
         })
     });
-    // let allContactsJSON = contactRepo.readContactFile();
-    // let allContacts = JSON.parse(allContactsJSON).contacts;
-    // return allContacts;
 }
 
-function findContact(parameter) {
-    let allContacts = getAllContacts();
-    let foundContacts;
-    foundContacts = allContacts.filter((contact) => {
-        return (contact.firstName.toLowerCase().indexOf(parameter.firstName.toLowerCase()) != -1 && contact.lastName.toLowerCase().indexOf(parameter.lastName.toLowerCase()) != -1)
-
-    });
-    return foundContacts;
+function findContact(parameter, callback) {
+    MongoClient.connect(url, (err, db) => {
+        getDBContacts(db, parameter, (list) => {
+            db.close();
+            callback(list);
+        })
+    })
 }
 
 function addContact(newContact) {
     MongoClient.connect(url, (err, db) => {
         insertContact(db, newContact, () => {
-            console.log(newContact);
             db.close();
         })
     });
-    // let allContacts = getAllContacts();
-    // newContact.contactKey = getNewID(allContacts);
-    // allContacts.push(newContact);
-    // contactRepo.writeContactFile(allContacts);
     return newContact;
 }
 
@@ -77,33 +66,6 @@ function deleteContact(nixedContactID) {
         return contact.contactKey !== nixedContactID;
     });
     contactRepo.writeContactFile(allContacts);
-}
-
-function makeID() {
-    let text = "";
-    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (let i = 0; i < KEY_SIZE; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
-}
-
-function getNewID(allContacts) {
-    let newID = makeID();
-    let isNew = true;
-    for (let i = 0; i < allContacts.length; i++) {
-        if (newID === allContacts[i].contactKey) {
-            isNew = false;
-        }
-    }
-    if (isNew) {
-        return newID;
-    }
-    else {
-        console.log("Wow, a duplicate....");
-        getNewID();
-    }
 }
 
 function sortContacts(sortParams, sortArray = []) {

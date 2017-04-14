@@ -27,8 +27,9 @@ app.route("/contacts")
         });
     })
     .post((req, res) => {
-        let results = contactServ.findContact(req.body.parameter);
-        res.send(results);
+        contactServ.findContact(req.body.parameter, (foundContact) => {
+            res.send(foundContact);
+        });
     })
     .put((req, res) => {
         let newContact = contactServ.addContacts(req.body.parameter);
