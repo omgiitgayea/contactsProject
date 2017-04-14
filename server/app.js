@@ -22,7 +22,7 @@ app.use(express.static("public"));
 // more or less done
 app.route("/contacts")
     .get((req, res) => {
-        contactServ.getAllContacts((allContacts) => {
+        contactServ.getAllContacts(null, (allContacts) => {
             res.send(allContacts);
         });
     })
@@ -47,8 +47,10 @@ app.put("/editContact", (req, res) => {
 });
 
 app.put("/sortContacts", (req, res) => {
-    let sortedArray = contactServ.sortContacts(req.body.parameter);
-    res.send(sortedArray)
+    console.log(req.body.parameter);
+    contactServ.getAllContacts(null, (allContacts) => {
+        res.send(allContacts);
+    });
 });
 
 app.put("/sortSearch", (req, res) => {
