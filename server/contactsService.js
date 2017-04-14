@@ -1,9 +1,6 @@
 /**
  * Created by GodaiYuusaku on 3/30/17.
  */
-const contactRepo = require('./contactsRepository');
-const KEY_SIZE = 5;
-
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
 const url = 'mongodb://localhost:27017/myContacts';
@@ -16,24 +13,20 @@ function insertContact(db, newContact, callback) {
 }
 
 function getAllDDBContacts(db, sortDir = null, callback ) {
-    let fieldName = "firstName";
-    let testObj = {};
-    testObj[fieldName] = -1; // may want to use elsewhere now. testObj = {fieldName : -1}
-    // let aTest = null; // can use aTest = null for no sort, aTest = {fieldName: -1 or 1} for sorting
     let collection = db.collection('contacts');
     collection.find({}).sort(sortDir).toArray((err, docs) => {
         callback(docs);
     })
 }
 
-function getDBContacts(db, searchParams = null, callback) {
+function getDBContacts(db, searchParams = null, sortDir = null, callback) {
     let collection = db.collection('contacts');
     collection.find({
         $and: [
             {"firstName": new RegExp(searchParams.firstName, "i")},
             {"lastName": new RegExp(searchParams.lastName, "i")}
         ]
-    }).toArray((err, docs) => {
+    }).sort(sortDir).toArray((err, docs) => {
         callback(docs);
     })
 }
@@ -53,9 +46,9 @@ function getAllContacts(sortInfo, callback) {
     });
 }
 
-function findContact(parameter, callback) {
+function findContact(parameter, sortInfo, callback) {
     MongoClient.connect(url, (err, db) => {
-        getDBContacts(db, parameter, (list) => {
+        getDBContacts(db, parameter, sortInfo, (list) => {
             db.close();
             callback(list);
         })
@@ -101,62 +94,8 @@ function deleteContact(nixedContactID) {
     });
 }
 
-function sortContacts(sortParams, sortArray = []) {
-    let allContacts;
-    if (sortArray.length === 0) {
-        allContacts = getAllContacts();
-    }
-    else {
-        allContacts = sortArray;
-    }
-
-    if (sortParams.fieldName === "First Name") {
-        if (sortParams.reverseOrder) {
-            allContacts.sort((a, b) => {
-                return (a.firstName.toLowerCase() < b.firstName.toLowerCase()) ? 1 : ((b.firstName.toLowerCase() < a.firstName.toLowerCase()) ? -1 : 0);
-            });
-        }
-        else {
-            allContacts.sort((a, b) => {
-                return (a.firstName.toLowerCase() > b.firstName.toLowerCase()) ? 1 : ((b.firstName.toLowerCase() > a.firstName.toLowerCase()) ? -1 : 0);
-            });
-        }
-    }
-    else {
-        if (sortParams.reverseOrder) {
-            allContacts.sort((a, b) => {
-                return (a.lastName.toLowerCase() < b.lastName.toLowerCase()) ? 1 : ((b.lastName.toLowerCase() < a.lastName.toLowerCase()) ? -1 : 0);
-            });
-        }
-        else {
-            allContacts.sort((a, b) => {
-                return (a.lastName.toLowerCase() > b.lastName.toLowerCase()) ? 1 : ((b.lastName.toLowerCase() > a.lastName.toLowerCase()) ? -1 : 0);
-            });
-        }
-    }
-    return (allContacts);
-}
-
-function sortSearch(sortSearchParams) {
-    let foundContacts = findContact(sortSearchParams.search);
-    let sortedContacts = sortContacts(sortSearchParams, foundContacts);
-    return sortedContacts;
-}
-
 exports.getAllContacts = getAllContacts;
 exports.addContacts = addContact;
 exports.findContact = findContact;
 exports.editContact = editContact;
 exports.deleteContact = deleteContact;
-exports.sortContacts = sortContacts;
-exports.sortSearch = sortSearch;
-
-/*Adding a contact
- getting all contacts
- deleting a contact
- finding a contact
- edit a contact
-
- Left to do:
- sort contacts
- * */

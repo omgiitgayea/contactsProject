@@ -29,7 +29,6 @@ export class ContactsService {
         return this.http.get(`${this.baseUrl}/contacts`)
             .toPromise()
             .then(response => {
-                console.log(response);
                 this.fullContactList = response.json();
                 this.fullContactListSub.next(this.fullContactList);
             })
@@ -77,9 +76,9 @@ export class ContactsService {
             .catch((error: any) => Observable.throw(error));
     }
 
-    sortContact(fieldName: string, reverseOrder: boolean): Promise<any> {
+    sortContact(sortOrder: any): Promise<any> {
         return this.http
-            .put(`${this.baseUrl}/sortContacts`, {parameter: {fieldName: fieldName, reverseOrder: reverseOrder}})
+            .put(`${this.baseUrl}/sortContacts`, {parameter: sortOrder})
             .toPromise()
             .then((response) => {
                 this.fullContactList = response.json();
@@ -88,12 +87,11 @@ export class ContactsService {
             .catch((error: any) => Observable.throw(error));
     }
 
-    sortSearch(fieldName: string, reverseOrder: boolean, params: Contact): Promise<any> {
+    sortSearch(sortOrder: any, params: Contact): Promise<any> {
         return this.http
             .put(`${this.baseUrl}/sortSearch`, {
                 parameter: {
-                    fieldName: fieldName,
-                    reverseOrder: reverseOrder,
+                    sort: sortOrder,
                     search: params
                 }
             })

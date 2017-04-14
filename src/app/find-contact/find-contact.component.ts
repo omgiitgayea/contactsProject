@@ -17,13 +17,13 @@ export class FindContactComponent implements OnInit {
 
     fields: any[] = [{
         fieldName: 'First Name',
-        currentSort: false,
-        reverseOrder: false
+        order: 0,
+        field: 'firstName'
     },
         {
             fieldName: 'Last Name',
-            currentSort: false,
-            reverseOrder: false
+            order: 0,
+            field: 'lastName'
         }
     ];
 
@@ -67,22 +67,23 @@ export class FindContactComponent implements OnInit {
         const searchContact: Contact = new Contact(this.firstName, this.lastName);
         for (let i = 0; i < this.fields.length; i++) {
             if (this.fields[i].fieldName === fieldName) {
-                if (this.fields[i].currentSort) {
-                    if (this.fields[i].reverseOrder) {
-                        this.fields[i].reverseOrder = false;
-                    }
-                    else {
-                        this.fields[i].reverseOrder = true;
-                    }
+                if (this.fields[i].order === 1) {
+                    this.fields[i].order = -1;
                 }
                 else {
-                    this.fields[i].currentSort = true;
+                    this.fields[i].order++;
                 }
-                this._contactsService.sortSearch(this.fields[i].fieldName, this.fields[i].reverseOrder, searchContact);
+                let sortOrder = {};
+                if (this.fields[i].order === 0) {
+                    sortOrder = null;
+                }
+                else {
+                    sortOrder[this.fields[i].field] = this.fields[i].order;
+                }
+                this._contactsService.sortSearch(sortOrder, searchContact);
             }
             else {
-                this.fields[i].currentSort = false;
-                this.fields[i].reverseOrder = false;
+                this.fields[i].order = 0;
             }
         }
     }

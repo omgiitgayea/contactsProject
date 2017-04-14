@@ -27,7 +27,7 @@ app.route("/contacts")
         });
     })
     .post((req, res) => {
-        contactServ.findContact(req.body.parameter, (foundContact) => {
+        contactServ.findContact(req.body.parameter, null, (foundContact) => {
             res.send(foundContact);
         });
     })
@@ -47,13 +47,14 @@ app.put("/editContact", (req, res) => {
 });
 
 app.put("/sortContacts", (req, res) => {
-    console.log(req.body.parameter);
-    contactServ.getAllContacts(null, (allContacts) => {
+    contactServ.getAllContacts(req.body.parameter, (allContacts) => {
         res.send(allContacts);
     });
 });
 
 app.put("/sortSearch", (req, res) => {
-    let sortedSearchArray = contactServ.sortSearch(req.body.parameter);
-    res.send(sortedSearchArray);
+    let searchParms = req.body.parameter;
+    contactServ.findContact(searchParms.search, searchParms.sort, (foundContact) => {
+        res.send(foundContact);
+    });
 });

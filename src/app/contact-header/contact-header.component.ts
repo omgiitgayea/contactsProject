@@ -9,13 +9,13 @@ import {ContactsService} from '../contacts.service';
 export class ContactHeaderComponent implements OnInit {
     fields: any[] = [{
         fieldName: 'First Name',
-        currentSort: false,
-        reverseOrder: false
+        order: 0,
+        field: 'firstName'
     },
         {
             fieldName: 'Last Name',
-            currentSort: false,
-            reverseOrder: false
+            order: 0,
+            field: 'lastName'
         }
     ];
 
@@ -28,22 +28,23 @@ export class ContactHeaderComponent implements OnInit {
     sort(fieldName: string) {
         for (let i = 0; i < this.fields.length; i++) {
             if (this.fields[i].fieldName === fieldName) {
-                if (this.fields[i].currentSort) {
-                    if (this.fields[i].reverseOrder) {
-                        this.fields[i].reverseOrder = false;
-                    }
-                    else {
-                        this.fields[i].reverseOrder = true;
-                    }
+                if (this.fields[i].order === 1) {
+                    this.fields[i].order = -1;
                 }
                 else {
-                    this.fields[i].currentSort = true;
+                    this.fields[i].order++;
                 }
-                this._contactsService.sortContact(this.fields[i].fieldName, this.fields[i].reverseOrder);
+                let sortOrder = {};
+                if (this.fields[i].order === 0) {
+                    sortOrder = null;
+                }
+                else {
+                    sortOrder[this.fields[i].field] = this.fields[i].order;
+                }
+                this._contactsService.sortContact(sortOrder);
             }
             else {
-                this.fields[i].currentSort = false;
-                this.fields[i].reverseOrder = false;
+                this.fields[i].order = 0;
             }
         }
     }
