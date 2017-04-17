@@ -7,16 +7,23 @@
         <span>Last Name</span>
         <input [(ngModel)]="lastName" (keyup)="autoComplete($event)" type="text">
     </label>
+    <label class="inputField">
+        <span>Phone Number</span>
+        <input [(ngModel)]="phoneNo" (keyup)="autoComplete($event)" type="text">
+    </label>
+    <label class="inputField">
+        <span>Email</span>
+        <input [(ngModel)]="email" (keyup)="autoComplete($event)" type="text">
+    </label>
     <button class="myButton" (click)="clearFields()">Clear Fields</button>
 </div>
 <div *ngIf="searchResults">
-    <!--We have found these contacts:-->
     <div *ngIf="searchResults.length == 0">No such contact</div>
     <div class="header" *ngIf="searchResults.length != 0">
         <div class="headerTitle" *ngFor="let title of fields" (click)="sort(title.fieldName)">
             {{title.fieldName}}
-            <i class="fa fa-angle-up" *ngIf="title.currentSort && !title.reverseOrder"></i>
-            <i class="fa fa-angle-down" *ngIf="title.currentSort && title.reverseOrder"></i>
+            <i class="fa fa-angle-up" *ngIf="title.order === 1"></i>
+            <i class="fa fa-angle-down" *ngIf="title.order === -1"></i>
         </div>
 
     </div>

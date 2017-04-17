@@ -11,6 +11,8 @@ import {Subscription} from 'rxjs';
 export class FindContactComponent implements OnInit {
     firstName = '';
     lastName = '';
+    phoneNo = '';
+    email = '';
     searchResults: any[];
     searchResultsSubscription: Subscription;
     redoSearch: Subscription;
@@ -24,6 +26,16 @@ export class FindContactComponent implements OnInit {
             fieldName: 'Last Name',
             order: 0,
             field: 'lastName'
+        },
+        {
+            fieldName: 'Phone Number',
+            order: 0,
+            field: 'phoneNo'
+        },
+        {
+            fieldName: 'Email',
+            order: 0,
+            field: 'email'
         }
     ];
 
@@ -34,7 +46,7 @@ export class FindContactComponent implements OnInit {
             });
         this.redoSearch = _contactsService.redoSearchSub$.subscribe(
             () => {
-                const searchContact: Contact = new Contact(this.firstName, this.lastName);
+                const searchContact: Contact = new Contact(this.firstName, this.lastName, this.email, this.phoneNo);
                 this._contactsService.findContact(searchContact);
             });
     }
@@ -45,13 +57,15 @@ export class FindContactComponent implements OnInit {
     clearFields(): void {
         this.firstName = '';
         this.lastName = '';
+        this.email = '';
+        this.phoneNo = '';
         this.searchResults = null;
     }
 
     autoComplete(ev: any): void {
         const val = ev.target.value;
-        if ((val && val.trim() !== '') || this.firstName !== '' || this.lastName !== '') {
-            const searchContact: Contact = new Contact(this.firstName, this.lastName);
+        if ((val && val.trim() !== '') || this.firstName !== '' || this.lastName !== '' || this.email !== '' || this.phoneNo !== '') {
+            const searchContact: Contact = new Contact(this.firstName, this.lastName, this.email, this.phoneNo);
             for (let i = 0; i < this.fields.length; i++) {
                 this.fields[i].currentSort = false;
                 this.fields[i].reverseOrder = false;
@@ -64,7 +78,7 @@ export class FindContactComponent implements OnInit {
     }
 
     sort(fieldName): void {
-        const searchContact: Contact = new Contact(this.firstName, this.lastName);
+        const searchContact: Contact = new Contact(this.firstName, this.lastName, this.email, this.phoneNo);
         for (let i = 0; i < this.fields.length; i++) {
             if (this.fields[i].fieldName === fieldName) {
                 if (this.fields[i].order === 1) {

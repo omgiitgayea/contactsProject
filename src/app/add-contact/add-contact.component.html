@@ -7,6 +7,14 @@
         <span>Last Name</span>
         <input [(ngModel)]="lastName" type="text" (keyup)="enterPressed($event)">
     </label>
+    <label class="inputField">
+        <span>Phone Number</span>
+        <input [(ngModel)]="phoneNo" type="text" (keyup)="enterPressed($event)">
+    </label>
+    <label class="inputField">
+        <span>Email</span>
+        <input [(ngModel)]="email" type="text" (keyup)="enterPressed($event)">
+    </label>
     <button class="myButton" (click)="addContact()">Add me!</button>
 </div>
 <div *ngIf="error" class="invalidContact">

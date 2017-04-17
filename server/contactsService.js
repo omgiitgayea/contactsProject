@@ -24,7 +24,9 @@ function getDBContacts(db, searchParams = null, sortDir = null, callback) {
     collection.find({
         $and: [
             {"firstName": new RegExp(searchParams.firstName, "i")},
-            {"lastName": new RegExp(searchParams.lastName, "i")}
+            {"lastName": new RegExp(searchParams.lastName, "i")},
+            {"email": new RegExp(searchParams.email, "i")},
+            {"phoneNo": new RegExp(searchParams.phoneNo, "i")}
         ]
     }).sort(sortDir).toArray((err, docs) => {
         callback(docs);

@@ -16,6 +16,16 @@ export class ContactHeaderComponent implements OnInit {
             fieldName: 'Last Name',
             order: 0,
             field: 'lastName'
+        },
+        {
+            fieldName: 'Phone Number',
+            order: 0,
+            field: 'phoneNo'
+        },
+        {
+            fieldName: 'Email',
+            order: 0,
+            field: 'email'
         }
     ];
 

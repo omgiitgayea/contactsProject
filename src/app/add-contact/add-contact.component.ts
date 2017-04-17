@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ContactsService} from '../contacts.service';
 import {Contact} from '../contact';
-import {Subscription} from "rxjs";
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-add-contact',
@@ -11,6 +11,8 @@ import {Subscription} from "rxjs";
 export class AddContactComponent implements OnInit {
     firstName = '';
     lastName = '';
+    phoneNo = '';
+    email = '';
     error = false;
     newContact: any;
     newContactSubscription: Subscription;
@@ -35,10 +37,12 @@ export class AddContactComponent implements OnInit {
             this.error = true;
         }
         else {
-            const newContact: Contact = new Contact(this.firstName, this.lastName);
+            const newContact: Contact = new Contact(this.firstName, this.lastName, this.email, this.phoneNo);
             this._contactsService.addContact(newContact);
             this.firstName = '';
             this.lastName = '';
+            this.phoneNo = '';
+            this.email = '';
             this.error = false;
         }
     }

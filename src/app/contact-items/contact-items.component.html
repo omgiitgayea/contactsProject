@@ -2,7 +2,8 @@
     <div *ngSwitchCase="false" class="contact">
         <div class="contactField">First Name: {{contact.firstName}}</div>
         <div class="contactField">Last Name: {{contact.lastName}}</div>
-        <div class="contactField">ID: {{contact._id}}</div>
+        <div class="contactField">Phone Number: {{contact.phoneNo}}</div>
+        <div class="contactField">Email: {{contact.email}}</div>
         <i class="fa fa-pencil bluePencil" (click)="editContact()">&nbsp;</i>
         <i class="fa fa-times-circle-o redX" (click)="deleteContact(contact._id)"></i>
     </div>
@@ -15,6 +16,14 @@
         <label class="contactField">
             Last Name
             <input [(ngModel)]="contact.lastName" type="text" (keyup)="enterPressed($event)">
+        </label>
+        <label class="contactField">
+            Phone Number
+            <input [(ngModel)]="contact.phoneNo" type="text" (keyup)="enterPressed($event)">
+        </label>
+        <label class="contactField">
+            Email
+            <input [(ngModel)]="contact.email" type="text" (keyup)="enterPressed($event)">
         </label>
         <button (click)="saveNewDetails()">Save</button>
     </div>
