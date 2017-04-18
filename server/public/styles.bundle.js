@@ -92,7 +92,7 @@ exports = module.exports = __webpack_require__(16)();
 
 
 // module
-exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\r\nbody, html {\r\n    margin: 0;\r\n    padding: 0;\r\n    height: 100%;\r\n    width: 100%;\r\n    /*box-sizing: border-box;*/\r\n    background-image: url(" + __webpack_require__(491) + ");\r\n}\r\n", ""]);
+exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\nbody, html {\n    margin: 0;\n    padding: 0;\n    height: 100%;\n    width: 100%;\n    /*box-sizing: border-box;*/\n    background-image: url(" + __webpack_require__(491) + ");\n}\n", ""]);
 
 // exports
 

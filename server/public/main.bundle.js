@@ -61,6 +61,8 @@ var AddContactComponent = (function () {
         this._contactsService = _contactsService;
         this.firstName = '';
         this.lastName = '';
+        this.phoneNo = '';
+        this.email = '';
         this.error = false;
         this.newContactSubscription = _contactsService.newContactSub$.subscribe(function (newContact) {
             _this.newContact = newContact;
@@ -78,10 +80,12 @@ var AddContactComponent = (function () {
             this.error = true;
         }
         else {
-            var newContact = new __WEBPACK_IMPORTED_MODULE_2__contact__["a" /* Contact */](this.firstName, this.lastName);
+            var newContact = new __WEBPACK_IMPORTED_MODULE_2__contact__["a" /* Contact */](this.firstName, this.lastName, this.email, this.phoneNo);
             this._contactsService.addContact(newContact);
             this.firstName = '';
             this.lastName = '';
+            this.phoneNo = '';
+            this.email = '';
             this.error = false;
         }
     };
@@ -233,13 +237,23 @@ var ContactHeaderComponent = (function () {
         this._contactsService = _contactsService;
         this.fields = [{
                 fieldName: 'First Name',
-                currentSort: false,
-                reverseOrder: false
+                order: 0,
+                field: 'firstName'
             },
             {
                 fieldName: 'Last Name',
-                currentSort: false,
-                reverseOrder: false
+                order: 0,
+                field: 'lastName'
+            },
+            {
+                fieldName: 'Phone Number',
+                order: 0,
+                field: 'phoneNo'
+            },
+            {
+                fieldName: 'Email',
+                order: 0,
+                field: 'email'
             }
         ];
     }
@@ -248,22 +262,23 @@ var ContactHeaderComponent = (function () {
     ContactHeaderComponent.prototype.sort = function (fieldName) {
         for (var i = 0; i < this.fields.length; i++) {
             if (this.fields[i].fieldName === fieldName) {
-                if (this.fields[i].currentSort) {
-                    if (this.fields[i].reverseOrder) {
-                        this.fields[i].reverseOrder = false;
-                    }
-                    else {
-                        this.fields[i].reverseOrder = true;
-                    }
+                if (this.fields[i].order === 1) {
+                    this.fields[i].order = -1;
                 }
                 else {
-                    this.fields[i].currentSort = true;
+                    this.fields[i].order++;
                 }
-                this._contactsService.sortContact(this.fields[i].fieldName, this.fields[i].reverseOrder);
+                var sortOrder = {};
+                if (this.fields[i].order === 0) {
+                    sortOrder = null;
+                }
+                else {
+                    sortOrder[this.fields[i].field] = this.fields[i].order;
+                }
+                this._contactsService.sortContact(sortOrder);
             }
             else {
-                this.fields[i].currentSort = false;
-                this.fields[i].reverseOrder = false;
+                this.fields[i].order = 0;
             }
         }
     };
@@ -423,22 +438,34 @@ var FindContactComponent = (function () {
         this._contactsService = _contactsService;
         this.firstName = '';
         this.lastName = '';
+        this.phoneNo = '';
+        this.email = '';
         this.fields = [{
                 fieldName: 'First Name',
-                currentSort: false,
-                reverseOrder: false
+                order: 0,
+                field: 'firstName'
             },
             {
                 fieldName: 'Last Name',
-                currentSort: false,
-                reverseOrder: false
+                order: 0,
+                field: 'lastName'
+            },
+            {
+                fieldName: 'Phone Number',
+                order: 0,
+                field: 'phoneNo'
+            },
+            {
+                fieldName: 'Email',
+                order: 0,
+                field: 'email'
             }
         ];
         this.searchResultsSubscription = _contactsService.searchResultsSub$.subscribe(function (results) {
             _this.searchResults = results;
         });
         this.redoSearch = _contactsService.redoSearchSub$.subscribe(function () {
-            var searchContact = new __WEBPACK_IMPORTED_MODULE_1__contact__["a" /* Contact */](_this.firstName, _this.lastName);
+            var searchContact = new __WEBPACK_IMPORTED_MODULE_1__contact__["a" /* Contact */](_this.firstName, _this.lastName, _this.email, _this.phoneNo);
             _this._contactsService.findContact(searchContact);
         });
     }
@@ -447,12 +474,14 @@ var FindContactComponent = (function () {
     FindContactComponent.prototype.clearFields = function () {
         this.firstName = '';
         this.lastName = '';
+        this.email = '';
+        this.phoneNo = '';
         this.searchResults = null;
     };
     FindContactComponent.prototype.autoComplete = function (ev) {
         var val = ev.target.value;
-        if ((val && val.trim() !== '') || this.firstName !== '' || this.lastName !== '') {
-            var searchContact = new __WEBPACK_IMPORTED_MODULE_1__contact__["a" /* Contact */](this.firstName, this.lastName);
+        if ((val && val.trim() !== '') || this.firstName !== '' || this.lastName !== '' || this.email !== '' || this.phoneNo !== '') {
+            var searchContact = new __WEBPACK_IMPORTED_MODULE_1__contact__["a" /* Contact */](this.firstName, this.lastName, this.email, this.phoneNo);
             for (var i = 0; i < this.fields.length; i++) {
                 this.fields[i].currentSort = false;
                 this.fields[i].reverseOrder = false;
@@ -464,25 +493,26 @@ var FindContactComponent = (function () {
         }
     };
     FindContactComponent.prototype.sort = function (fieldName) {
-        var searchContact = new __WEBPACK_IMPORTED_MODULE_1__contact__["a" /* Contact */](this.firstName, this.lastName);
+        var searchContact = new __WEBPACK_IMPORTED_MODULE_1__contact__["a" /* Contact */](this.firstName, this.lastName, this.email, this.phoneNo);
         for (var i = 0; i < this.fields.length; i++) {
             if (this.fields[i].fieldName === fieldName) {
-                if (this.fields[i].currentSort) {
-                    if (this.fields[i].reverseOrder) {
-                        this.fields[i].reverseOrder = false;
-                    }
-                    else {
-                        this.fields[i].reverseOrder = true;
-                    }
+                if (this.fields[i].order === 1) {
+                    this.fields[i].order = -1;
                 }
                 else {
-                    this.fields[i].currentSort = true;
+                    this.fields[i].order++;
                 }
-                this._contactsService.sortSearch(this.fields[i].fieldName, this.fields[i].reverseOrder, searchContact);
+                var sortOrder = {};
+                if (this.fields[i].order === 0) {
+                    sortOrder = null;
+                }
+                else {
+                    sortOrder[this.fields[i].field] = this.fields[i].order;
+                }
+                this._contactsService.sortSearch(sortOrder, searchContact);
             }
             else {
-                this.fields[i].currentSort = false;
-                this.fields[i].reverseOrder = false;
+                this.fields[i].order = 0;
             }
         }
     };
@@ -599,7 +629,7 @@ exports = module.exports = __webpack_require__(16)();
 
 
 // module
-exports.push([module.i, ".inputArea {\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -webkit-box-align: center;\r\n        -ms-flex-align: center;\r\n            align-items: center;\r\n    margin-bottom: 20px;\r\n}\r\n\r\n.inputField {\r\n    width: 20%;\r\n}\r\n\r\ninput {\r\n    border-radius: 5px;\r\n    outline: none;\r\n    padding: 5px;\r\n}\r\n\r\n.inputArea span {\r\n    margin-right: 5px;\r\n}\r\n\r\n.invalidContact {\r\n    color: red;\r\n}\r\n.myButton {\r\n    box-shadow: 2px 2px 0px 0px #8a2a21;\r\n    background: -webkit-linear-gradient(top, #c62d1f 5%, #f24437 100%);\r\n    background: linear-gradient(to bottom, #c62d1f 5%, #f24437 100%);\r\n    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24437', GradientType=0);\r\n    background-color: #c62d1f;\r\n    border-radius: 18px;\r\n    border: 1px solid #d02718;\r\n    display: inline-block;\r\n    cursor: pointer;\r\n    color: #ffffff;\r\n    font-size: 10px;\r\n    padding: 7px 15px;\r\n    text-decoration: none;\r\n    text-shadow: 0px 1px 0px #810e05;\r\n    outline: none;\r\n}\r\n\r\n.myButton:hover {\r\n    background: -webkit-linear-gradient(top, #f24437 5%, #c62d1f 100%);\r\n    background: linear-gradient(to bottom, #f24437 5%, #c62d1f 100%);\r\n    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24437', endColorstr='#c62d1f', GradientType=0);\r\n    background-color: #f24437;\r\n}\r\n\r\n.myButton:active {\r\n    position: relative;\r\n    top: 1px;\r\n}\r\n", ""]);
+exports.push([module.i, ".inputArea {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    margin-bottom: 20px;\n}\n\n.inputField {\n    width: 20%;\n}\n\ninput {\n    border-radius: 5px;\n    outline: none;\n    padding: 5px;\n}\n\n.inputArea span {\n    margin-right: 5px;\n}\n\n.invalidContact {\n    color: red;\n}\n.myButton {\n    box-shadow: 2px 2px 0px 0px #8a2a21;\n    background: -webkit-linear-gradient(top, #c62d1f 5%, #f24437 100%);\n    background: linear-gradient(to bottom, #c62d1f 5%, #f24437 100%);\n    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24437', GradientType=0);\n    background-color: #c62d1f;\n    border-radius: 18px;\n    border: 1px solid #d02718;\n    display: inline-block;\n    cursor: pointer;\n    color: #ffffff;\n    font-size: 10px;\n    padding: 7px 15px;\n    text-decoration: none;\n    text-shadow: 0px 1px 0px #810e05;\n    outline: none;\n}\n\n.myButton:hover {\n    background: -webkit-linear-gradient(top, #f24437 5%, #c62d1f 100%);\n    background: linear-gradient(to bottom, #f24437 5%, #c62d1f 100%);\n    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24437', endColorstr='#c62d1f', GradientType=0);\n    background-color: #f24437;\n}\n\n.myButton:active {\n    position: relative;\n    top: 1px;\n}\n", ""]);
 
 // exports
 
@@ -617,7 +647,7 @@ exports = module.exports = __webpack_require__(16)();
 
 
 // module
-exports.push([module.i, ".content {\r\n    padding: 0px;\r\n    font-family: 'Macondo', cursive;\r\n    height: 100%;\r\n    width: 80%;\r\n    margin: 0 auto;\r\n    background-image: url(" + __webpack_require__(488) + ");\r\n    color: darkgray;\r\n    box-sizing: border-box;\r\n    box-shadow: 5px 5px 5px black;\r\n    border-radius: 10px;\r\n    text-shadow: 2px 2px 2px black;\r\n}\r\n\r\n.presentDiv {\r\n    font-style: italic;\r\n    color: #ECB91F;\r\n}\r\n.title {\r\n    padding: 10px 20px;\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -webkit-box-align: center;\r\n        -ms-flex-align: center;\r\n            align-items: center;\r\n    font-size: 35px;\r\n    -webkit-box-pack: center;\r\n        -ms-flex-pack: center;\r\n            justify-content: center;\r\n}\r\n\r\n.titleImage {\r\n    background-image: url(" + __webpack_require__(490) + ");\r\n    width: 174px;\r\n    height: 48px;\r\n    margin-right: 10px;\r\n    background-repeat: no-repeat;\r\n    background-size: cover;\r\n}\r\n.nav-bar {\r\n    padding: 0 20px;\r\n    height: 50px;\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -webkit-box-align: center;\r\n        -ms-flex-align: center;\r\n            align-items: center;\r\n    -webkit-box-pack: justify;\r\n        -ms-flex-pack: justify;\r\n            justify-content: space-between;\r\n    font-size: 30px;\r\n    background-color: darkslateblue;\r\n    color: white;\r\n    box-shadow: 0px 5px 5px black;\r\n}\r\n\r\n.nav-bar a {\r\n    text-decoration: none;\r\n    color: antiquewhite;\r\n}\r\n.nav-items {\r\n    font-size: 20px;\r\n}\r\n\r\n.nav-items a {\r\n    margin-left: 10px;\r\n}\r\n.routeContainer {\r\n    padding: 20px;\r\n}\r\n", ""]);
+exports.push([module.i, ".content {\n    padding: 0px;\n    font-family: 'Macondo', cursive;\n    height: 100%;\n    width: 80%;\n    margin: 0 auto;\n    background-image: url(" + __webpack_require__(488) + ");\n    color: darkgray;\n    box-sizing: border-box;\n    box-shadow: 5px 5px 5px black;\n    border-radius: 10px;\n    text-shadow: 2px 2px 2px black;\n}\n\n.presentDiv {\n    font-style: italic;\n    color: #ECB91F;\n}\n.title {\n    padding: 10px 20px;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    font-size: 35px;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n}\n\n.titleImage {\n    background-image: url(" + __webpack_require__(490) + ");\n    width: 174px;\n    height: 48px;\n    margin-right: 10px;\n    background-repeat: no-repeat;\n    background-size: cover;\n}\n.nav-bar {\n    padding: 0 20px;\n    height: 50px;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-pack: justify;\n        -ms-flex-pack: justify;\n            justify-content: space-between;\n    font-size: 30px;\n    background-color: darkslateblue;\n    color: white;\n    box-shadow: 0px 5px 5px black;\n}\n\n.nav-bar a {\n    text-decoration: none;\n    color: antiquewhite;\n}\n.nav-items {\n    font-size: 20px;\n}\n\n.nav-items a {\n    margin-left: 10px;\n}\n.routeContainer {\n    padding: 20px;\n}\n", ""]);
 
 // exports
 
@@ -635,7 +665,7 @@ exports = module.exports = __webpack_require__(16)();
 
 
 // module
-exports.push([module.i, ".header {\r\n    height: 25px;\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    font-size: 20px;\r\n    -webkit-box-align: center;\r\n        -ms-flex-align: center;\r\n            align-items: center;\r\n}\r\n\r\n.headerTitle {\r\n    width: 20%;\r\n    cursor: pointer;\r\n}\r\n\r\ni {\r\n    margin: 0;\r\n    padding: 0 5px;\r\n    font-size: 10px;\r\n    font-weight: bold;\r\n}\r\n\r\n.sectionLine {\r\n    background-color: darkkhaki;\r\n    width: 100%;\r\n    height: 2px;\r\n    box-shadow: 0 1px 1px black;\r\n    margin: 5px 0;\r\n}\r\n", ""]);
+exports.push([module.i, ".header {\n    height: 25px;\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    font-size: 20px;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n}\n\n.headerTitle {\n    width: 20%;\n    cursor: pointer;\n}\n\ni {\n    margin: 0;\n    padding: 0 5px;\n    font-size: 10px;\n    font-weight: bold;\n}\n\n.sectionLine {\n    background-color: darkkhaki;\n    width: 100%;\n    height: 2px;\n    box-shadow: 0 1px 1px black;\n    margin: 5px 0;\n}\n", ""]);
 
 // exports
 
@@ -653,7 +683,7 @@ exports = module.exports = __webpack_require__(16)();
 
 
 // module
-exports.push([module.i, ".contact {\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -webkit-box-pack: start;\r\n        -ms-flex-pack: start;\r\n            justify-content: flex-start;\r\n}\r\n\r\n.contactField {\r\n    width: 20%;\r\n}\r\n\r\n.bluePencil {\r\n    color: dodgerblue;\r\n}\r\n\r\n.redX {\r\n    color: firebrick;\r\n}\r\n", ""]);
+exports.push([module.i, ".contact {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-pack: start;\n        -ms-flex-pack: start;\n            justify-content: flex-start;\n}\n\n.contactField {\n    width: 20%;\n}\n\n.bluePencil {\n    color: dodgerblue;\n}\n\n.redX {\n    color: firebrick;\n}\n", ""]);
 
 // exports
 
@@ -689,7 +719,7 @@ exports = module.exports = __webpack_require__(16)();
 
 
 // module
-exports.push([module.i, ".inputArea {\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -webkit-box-align: center;\r\n        -ms-flex-align: center;\r\n            align-items: center;\r\n    margin-bottom: 20px;\r\n}\r\n\r\n.inputField {\r\n    width: 20%;\r\n}\r\n\r\ninput {\r\n    border-radius: 5px;\r\n    outline: none;\r\n    padding: 5px;\r\n}\r\n\r\n.inputArea span {\r\n    margin-right: 5px;\r\n}\r\n.header {\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    font-size: 20px;\r\n    -webkit-box-align: center;\r\n        -ms-flex-align: center;\r\n            align-items: center;\r\n}\r\n\r\n.headerTitle {\r\n    width: 20%;\r\n    cursor: pointer;\r\n}\r\n\r\ni {\r\n    font-size: 10px;\r\n    font-weight: bold;\r\n    margin: 0;\r\n    padding: 0 5px;\r\n}\r\n\r\n.sectionLine {\r\n    background-color: darkkhaki;\r\n    width: 100%;\r\n    height: 2px;\r\n    box-shadow: 0 1px 1px black;\r\n    margin: 5px 0;\r\n}\r\n\r\n.myButton {\r\n    box-shadow: 2px 2px 0px 0px #8a2a21;\r\n    background: -webkit-linear-gradient(top, #c62d1f 5%, #f24437 100%);\r\n    background: linear-gradient(to bottom, #c62d1f 5%, #f24437 100%);\r\n    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24437', GradientType=0);\r\n    background-color: #c62d1f;\r\n    border-radius: 18px;\r\n    border: 1px solid #d02718;\r\n    display: inline-block;\r\n    cursor: pointer;\r\n    color: #ffffff;\r\n    font-size: 10px;\r\n    padding: 7px 15px;\r\n    text-decoration: none;\r\n    text-shadow: 0px 1px 0px #810e05;\r\n    outline: none;\r\n}\r\n\r\n.myButton:hover {\r\n    background: -webkit-linear-gradient(top, #f24437 5%, #c62d1f 100%);\r\n    background: linear-gradient(to bottom, #f24437 5%, #c62d1f 100%);\r\n    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24437', endColorstr='#c62d1f', GradientType=0);\r\n    background-color: #f24437;\r\n}\r\n\r\n.myButton:active {\r\n    position: relative;\r\n    top: 1px;\r\n}\r\n", ""]);
+exports.push([module.i, ".inputArea {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    margin-bottom: 20px;\n}\n\n.inputField {\n    width: 20%;\n}\n\ninput {\n    border-radius: 5px;\n    outline: none;\n    padding: 5px;\n}\n\n.inputArea span {\n    margin-right: 5px;\n}\n.header {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    font-size: 20px;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n}\n\n.headerTitle {\n    width: 20%;\n    cursor: pointer;\n}\n\ni {\n    font-size: 10px;\n    font-weight: bold;\n    margin: 0;\n    padding: 0 5px;\n}\n\n.sectionLine {\n    background-color: darkkhaki;\n    width: 100%;\n    height: 2px;\n    box-shadow: 0 1px 1px black;\n    margin: 5px 0;\n}\n\n.myButton {\n    box-shadow: 2px 2px 0px 0px #8a2a21;\n    background: -webkit-linear-gradient(top, #c62d1f 5%, #f24437 100%);\n    background: linear-gradient(to bottom, #c62d1f 5%, #f24437 100%);\n    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24437', GradientType=0);\n    background-color: #c62d1f;\n    border-radius: 18px;\n    border: 1px solid #d02718;\n    display: inline-block;\n    cursor: pointer;\n    color: #ffffff;\n    font-size: 10px;\n    padding: 7px 15px;\n    text-decoration: none;\n    text-shadow: 0px 1px 0px #810e05;\n    outline: none;\n}\n\n.myButton:hover {\n    background: -webkit-linear-gradient(top, #f24437 5%, #c62d1f 100%);\n    background: linear-gradient(to bottom, #f24437 5%, #c62d1f 100%);\n    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24437', endColorstr='#c62d1f', GradientType=0);\n    background-color: #f24437;\n}\n\n.myButton:active {\n    position: relative;\n    top: 1px;\n}\n", ""]);
 
 // exports
 
@@ -725,7 +755,7 @@ exports = module.exports = __webpack_require__(16)();
 
 
 // module
-exports.push([module.i, ".jeanExplained {\r\n    margin: 20px 0;\r\n}\r\n\r\n.sponsor {\r\n    width: 50%;\r\n    padding: 10px;\r\n    margin: 10px auto;\r\n    border-radius: 5px;\r\n    box-shadow: 5px 5px 5px black;\r\n    background-color: rgba(20, 20, 20, 0.2);\r\n}\r\n\r\n.sponsorContainer {\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -webkit-box-align: center;\r\n        -ms-flex-align: center;\r\n            align-items: center;\r\n    -webkit-box-pack: center;\r\n        -ms-flex-pack: center;\r\n            justify-content: center;\r\n    margin: 20px 0;\r\n}\r\n\r\n.sponsorTitle {\r\n    margin-right: 30px;\r\n}\r\n.eImage {\r\n    background-image: url(" + __webpack_require__(487) + ");\r\n    background-size: cover;\r\n    background-repeat: no-repeat;\r\n    width: 160px;\r\n    height: 36px;\r\n}\r\n\r\n.aImage {\r\n    background-image: url(" + __webpack_require__(486) + ");\r\n    width: 63px;\r\n    height: 63px;\r\n    background-size: cover;\r\n    background-repeat: no-repeat;\r\n}\r\n\r\n.nImage {\r\n    background-image: url(" + __webpack_require__(489) + ");\r\n    width: 200px;\r\n    height: 54px;\r\n    background-size: cover;\r\n    background-repeat: no-repeat;\r\n}\r\n", ""]);
+exports.push([module.i, ".jeanExplained {\n    margin: 20px 0;\n}\n\n.sponsor {\n    width: 50%;\n    padding: 10px;\n    margin: 10px auto;\n    border-radius: 5px;\n    box-shadow: 5px 5px 5px black;\n    background-color: rgba(20, 20, 20, 0.2);\n}\n\n.sponsorContainer {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    -webkit-box-pack: center;\n        -ms-flex-pack: center;\n            justify-content: center;\n    margin: 20px 0;\n}\n\n.sponsorTitle {\n    margin-right: 30px;\n}\n.eImage {\n    background-image: url(" + __webpack_require__(487) + ");\n    background-size: cover;\n    background-repeat: no-repeat;\n    width: 160px;\n    height: 36px;\n}\n\n.aImage {\n    background-image: url(" + __webpack_require__(486) + ");\n    width: 63px;\n    height: 63px;\n    background-size: cover;\n    background-repeat: no-repeat;\n}\n\n.nImage {\n    background-image: url(" + __webpack_require__(489) + ");\n    width: 200px;\n    height: 54px;\n    background-size: cover;\n    background-repeat: no-repeat;\n}\n", ""]);
 
 // exports
 
@@ -738,56 +768,56 @@ module.exports = module.exports.toString();
 /***/ 214:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"inputArea\">\r\n    <label class=\"inputField\">\r\n        <span>First Name</span>\r\n        <input [(ngModel)]=\"firstName\" type=\"text\" (keyup)=\"enterPressed($event)\">\r\n    </label>\r\n    <label class=\"inputField\">\r\n        <span>Last Name</span>\r\n        <input [(ngModel)]=\"lastName\" type=\"text\" (keyup)=\"enterPressed($event)\">\r\n    </label>\r\n    <button class=\"myButton\" (click)=\"addContact()\">Add me!</button>\r\n</div>\r\n<div *ngIf=\"error\" class=\"invalidContact\">\r\n    Please fill in at least one field\r\n</div>\r\n<div *ngIf=\"newContact\">\r\n    Hooray! You just successfully added this new contact!\r\n    <app-contact-items [contact]=\"newContact\"></app-contact-items>\r\n</div>\r\n"
+module.exports = "<div class=\"inputArea\">\n    <label class=\"inputField\">\n        <span>First Name</span>\n        <input [(ngModel)]=\"firstName\" type=\"text\" (keyup)=\"enterPressed($event)\">\n    </label>\n    <label class=\"inputField\">\n        <span>Last Name</span>\n        <input [(ngModel)]=\"lastName\" type=\"text\" (keyup)=\"enterPressed($event)\">\n    </label>\n    <label class=\"inputField\">\n        <span>Phone Number</span>\n        <input [(ngModel)]=\"phoneNo\" type=\"text\" (keyup)=\"enterPressed($event)\">\n    </label>\n    <label class=\"inputField\">\n        <span>Email</span>\n        <input [(ngModel)]=\"email\" type=\"text\" (keyup)=\"enterPressed($event)\">\n    </label>\n    <button class=\"myButton\" (click)=\"addContact()\">Add me!</button>\n</div>\n<div *ngIf=\"error\" class=\"invalidContact\">\n    Please fill in at least one field\n</div>\n<div *ngIf=\"newContact\">\n    Hooray! You just successfully added this new contact!\n    <app-contact-items [contact]=\"newContact\"></app-contact-items>\n</div>\n"
 
 /***/ }),
 
 /***/ 215:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"content\">\r\n    <div class=\"title\">\r\n        <div class=\"titleImage\"></div>\r\n        <div class=\"presentDiv\">Presents</div>\r\n    </div>\r\n    <nav class=\"nav-bar\">\r\n        <a routerLink=\"\">\r\n            {{subtitle}}\r\n        </a>\r\n        <div class=\"nav-items\">\r\n            <a routerLink=\"/fullList\">Get All Contacts</a>\r\n            <a routerLink=\"/findContact\">Find a Contact</a>\r\n            <a routerLink=\"/addContact\">Add a Contact</a>\r\n        </div>\r\n    </nav>\r\n    <div class=\"routeContainer\">\r\n        <router-outlet></router-outlet>\r\n    </div>\r\n</div>\r\n"
+module.exports = "<div class=\"content\">\n    <div class=\"title\">\n        <div class=\"titleImage\"></div>\n        <div class=\"presentDiv\">Presents</div>\n    </div>\n    <nav class=\"nav-bar\">\n        <a routerLink=\"\">\n            {{subtitle}}\n        </a>\n        <div class=\"nav-items\">\n            <a routerLink=\"/fullList\">Get All Contacts</a>\n            <a routerLink=\"/findContact\">Find a Contact</a>\n            <a routerLink=\"/addContact\">Add a Contact</a>\n        </div>\n    </nav>\n    <div class=\"routeContainer\">\n        <router-outlet></router-outlet>\n    </div>\n</div>\n"
 
 /***/ }),
 
 /***/ 216:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"header\">\n    <div class=\"headerTitle\" *ngFor=\"let title of fields\" (click)=\"sort(title.fieldName)\">\n        {{title.fieldName}}\n        <i class=\"fa fa-angle-up\" *ngIf=\"title.currentSort && !title.reverseOrder\"></i>\n        <i class=\"fa fa-angle-down\" *ngIf=\"title.currentSort && title.reverseOrder\"></i>\n    </div>\n</div>\n<div class=\"sectionLine\"></div>\n"
+module.exports = "<div class=\"header\">\n    <div class=\"headerTitle\" *ngFor=\"let title of fields\" (click)=\"sort(title.fieldName)\">\n        {{title.fieldName}}\n        <i class=\"fa fa-angle-up\" *ngIf=\"title.order === 1\"></i>\n        <i class=\"fa fa-angle-down\" *ngIf=\"title.order === -1\"></i>\n    </div>\n</div>\n<div class=\"sectionLine\"></div>\n"
 
 /***/ }),
 
 /***/ 217:
 /***/ (function(module, exports) {
 
-module.exports = "<div [ngSwitch]=\"editing\">\r\n    <div *ngSwitchCase=\"false\" class=\"contact\">\r\n        <div class=\"contactField\">First Name: {{contact.firstName}}</div>\r\n        <div class=\"contactField\">Last Name: {{contact.lastName}}</div>\r\n        <i class=\"fa fa-pencil bluePencil\" (click)=\"editContact()\">&nbsp;</i>\r\n        <i class=\"fa fa-times-circle-o redX\" (click)=\"deleteContact(contact.contactKey)\"></i>\r\n    </div>\r\n\r\n    <div *ngSwitchDefault class=\"contact\">\r\n        <label class=\"contactField\">\r\n            First Name\r\n            <input [(ngModel)]=\"contact.firstName\" type=\"text\" (keyup)=\"enterPressed($event)\">\r\n        </label>\r\n        <label class=\"contactField\">\r\n            Last Name\r\n            <input [(ngModel)]=\"contact.lastName\" type=\"text\" (keyup)=\"enterPressed($event)\">\r\n        </label>\r\n        <button (click)=\"saveNewDetails()\">Save</button>\r\n    </div>\r\n</div>\r\n"
+module.exports = "<div [ngSwitch]=\"editing\">\n    <div *ngSwitchCase=\"false\" class=\"contact\">\n        <div class=\"contactField\">First Name: {{contact.firstName}}</div>\n        <div class=\"contactField\">Last Name: {{contact.lastName}}</div>\n        <div class=\"contactField\">Phone Number: {{contact.phoneNo}}</div>\n        <div class=\"contactField\">Email: {{contact.email}}</div>\n        <i class=\"fa fa-pencil bluePencil\" (click)=\"editContact()\">&nbsp;</i>\n        <i class=\"fa fa-times-circle-o redX\" (click)=\"deleteContact(contact._id)\"></i>\n    </div>\n\n    <div *ngSwitchDefault class=\"contact\">\n        <label class=\"contactField\">\n            First Name\n            <input [(ngModel)]=\"contact.firstName\" type=\"text\" (keyup)=\"enterPressed($event)\">\n        </label>\n        <label class=\"contactField\">\n            Last Name\n            <input [(ngModel)]=\"contact.lastName\" type=\"text\" (keyup)=\"enterPressed($event)\">\n        </label>\n        <label class=\"contactField\">\n            Phone Number\n            <input [(ngModel)]=\"contact.phoneNo\" type=\"text\" (keyup)=\"enterPressed($event)\">\n        </label>\n        <label class=\"contactField\">\n            Email\n            <input [(ngModel)]=\"contact.email\" type=\"text\" (keyup)=\"enterPressed($event)\">\n        </label>\n        <button (click)=\"saveNewDetails()\">Save</button>\n    </div>\n</div>\n"
 
 /***/ }),
 
 /***/ 218:
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n    <app-contact-header></app-contact-header>\r\n    <div *ngFor=\"let contact of myContacts\">\r\n        <app-contact-items [searchParam]=\"contact.contactKey\" [isContactKey]=\"true\" [contact]=\"contact\"></app-contact-items>\r\n    </div>\r\n</div>\r\n"
+module.exports = "<div>\n    <app-contact-header></app-contact-header>\n    <div *ngFor=\"let contact of myContacts\">\n        <app-contact-items [searchParam]=\"contact.contactKey\" [isContactKey]=\"true\" [contact]=\"contact\"></app-contact-items>\n    </div>\n</div>\n"
 
 /***/ }),
 
 /***/ 219:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"inputArea\">\r\n    <label class=\"inputField\">\r\n        <span>First Name</span>\r\n        <input [(ngModel)]=\"firstName\" (keyup)=\"autoComplete($event)\" type=\"text\">\r\n    </label>\r\n    <label class=\"inputField\">\r\n        <span>Last Name</span>\r\n        <input [(ngModel)]=\"lastName\" (keyup)=\"autoComplete($event)\" type=\"text\">\r\n    </label>\r\n    <button class=\"myButton\" (click)=\"clearFields()\">Clear Fields</button>\r\n</div>\r\n<div *ngIf=\"searchResults\">\r\n    <!--We have found these contacts:-->\r\n    <div *ngIf=\"searchResults.length == 0\">No such contact</div>\r\n    <div class=\"header\" *ngIf=\"searchResults.length != 0\">\r\n        <div class=\"headerTitle\" *ngFor=\"let title of fields\" (click)=\"sort(title.fieldName)\">\r\n            {{title.fieldName}}\r\n            <i class=\"fa fa-angle-up\" *ngIf=\"title.currentSort && !title.reverseOrder\"></i>\r\n            <i class=\"fa fa-angle-down\" *ngIf=\"title.currentSort && title.reverseOrder\"></i>\r\n        </div>\r\n\r\n    </div>\r\n    <div class=\"sectionLine\" *ngIf=\"searchResults.length != 0\"></div>\r\n    <div *ngFor=\"let contact of searchResults\">\r\n        <app-contact-items [contact]=\"contact\"></app-contact-items>\r\n    </div>\r\n</div>\r\n"
+module.exports = "<div class=\"inputArea\">\n    <label class=\"inputField\">\n        <span>First Name</span>\n        <input [(ngModel)]=\"firstName\" (keyup)=\"autoComplete($event)\" type=\"text\">\n    </label>\n    <label class=\"inputField\">\n        <span>Last Name</span>\n        <input [(ngModel)]=\"lastName\" (keyup)=\"autoComplete($event)\" type=\"text\">\n    </label>\n    <label class=\"inputField\">\n        <span>Phone Number</span>\n        <input [(ngModel)]=\"phoneNo\" (keyup)=\"autoComplete($event)\" type=\"text\">\n    </label>\n    <label class=\"inputField\">\n        <span>Email</span>\n        <input [(ngModel)]=\"email\" (keyup)=\"autoComplete($event)\" type=\"text\">\n    </label>\n    <button class=\"myButton\" (click)=\"clearFields()\">Clear Fields</button>\n</div>\n<div *ngIf=\"searchResults\">\n    <div *ngIf=\"searchResults.length == 0\">No such contact</div>\n    <div class=\"header\" *ngIf=\"searchResults.length != 0\">\n        <div class=\"headerTitle\" *ngFor=\"let title of fields\" (click)=\"sort(title.fieldName)\">\n            {{title.fieldName}}\n            <i class=\"fa fa-angle-up\" *ngIf=\"title.order === 1\"></i>\n            <i class=\"fa fa-angle-down\" *ngIf=\"title.order === -1\"></i>\n        </div>\n\n    </div>\n    <div class=\"sectionLine\" *ngIf=\"searchResults.length != 0\"></div>\n    <div *ngFor=\"let contact of searchResults\">\n        <app-contact-items [contact]=\"contact\"></app-contact-items>\n    </div>\n</div>\n"
 
 /***/ }),
 
 /***/ 220:
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n    These aren't the droids you're looking for. Move along.\r\n</div>\r\n"
+module.exports = "<div>\n    These aren't the droids you're looking for. Move along.\n</div>\n"
 
 /***/ }),
 
 /***/ 221:
 /***/ (function(module, exports) {
 
-module.exports = "<div>\r\n    <div>\r\n        Welcome to 1-801-CONTACTS where you can make up a list of people you 'know'. If you want to edit or delete a\r\n        contact, please do so from either the Get All Contacts or Find a Contact section. You can even do that from the\r\n        Add a Contact section, although I'm not sure why you would delete a contact immediately after creating it...\r\n    </div>\r\n    <div class=\"jeanExplained\">\r\n        This is an example of JEAN stack coding, a variation on the MEAN stack, but there's no database right now so the\r\n        contacts are stored in a JSON file, hence the J.\r\n    </div>\r\n    <div class=\"sponsor\">\r\n        <div class=\"sponsorContainer\">\r\n            <div class=\"sponsorTitle\">E is for Express</div>\r\n            <div class=\"eImage\"></div>\r\n        </div>\r\n        <div class=\"sponsorContainer\">\r\n            <div class=\"sponsorTitle\">A is for Angular (specifically 4.0)</div>\r\n            <div class=\"aImage\"></div>\r\n        </div>\r\n        <div class=\"sponsorContainer\">\r\n            <div class=\"sponsorTitle\">N is for Node</div>\r\n            <div class=\"nImage\"></div>\r\n        </div>\r\n    </div>\r\n</div>\r\n"
+module.exports = "<div>\n    <div>\n        Welcome to 1-801-CONTACTS where you can make up a list of people you 'know'. If you want to edit or delete a\n        contact, please do so from either the Get All Contacts or Find a Contact section. You can even do that from the\n        Add a Contact section, although I'm not sure why you would delete a contact immediately after creating it...\n    </div>\n    <div class=\"jeanExplained\">\n        This is an example of JEAN stack coding, a variation on the MEAN stack, but there's no database right now so the\n        contacts are stored in a JSON file, hence the J.\n    </div>\n    <div class=\"sponsor\">\n        <div class=\"sponsorContainer\">\n            <div class=\"sponsorTitle\">E is for Express</div>\n            <div class=\"eImage\"></div>\n        </div>\n        <div class=\"sponsorContainer\">\n            <div class=\"sponsorTitle\">A is for Angular (specifically 4.0)</div>\n            <div class=\"aImage\"></div>\n        </div>\n        <div class=\"sponsorContainer\">\n            <div class=\"sponsorTitle\">N is for Node</div>\n            <div class=\"nImage\"></div>\n        </div>\n    </div>\n</div>\n"
 
 /***/ }),
 
@@ -875,10 +905,10 @@ var ContactsService = (function () {
             .then(function () { })
             .catch(function (error) { return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].throw(error); });
     };
-    ContactsService.prototype.sortContact = function (fieldName, reverseOrder) {
+    ContactsService.prototype.sortContact = function (sortOrder) {
         var _this = this;
         return this.http
-            .put(this.baseUrl + "/sortContacts", { parameter: { fieldName: fieldName, reverseOrder: reverseOrder } })
+            .put(this.baseUrl + "/sortContacts", { parameter: sortOrder })
             .toPromise()
             .then(function (response) {
             _this.fullContactList = response.json();
@@ -886,13 +916,12 @@ var ContactsService = (function () {
         })
             .catch(function (error) { return __WEBPACK_IMPORTED_MODULE_2_rxjs__["Observable"].throw(error); });
     };
-    ContactsService.prototype.sortSearch = function (fieldName, reverseOrder, params) {
+    ContactsService.prototype.sortSearch = function (sortOrder, params) {
         var _this = this;
         return this.http
             .put(this.baseUrl + "/sortSearch", {
             parameter: {
-                fieldName: fieldName,
-                reverseOrder: reverseOrder,
+                sort: sortOrder,
                 search: params
             }
         })
@@ -964,13 +993,15 @@ module.exports = __webpack_require__(135);
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Contact; });
 var Contact = (function () {
-    function Contact(firstName, lastName, contactKey) {
+    function Contact(firstName, lastName, email, phoneNo) {
         if (firstName === void 0) { firstName = ''; }
         if (lastName === void 0) { lastName = ''; }
-        if (contactKey === void 0) { contactKey = ''; }
+        if (email === void 0) { email = ''; }
+        if (phoneNo === void 0) { phoneNo = ''; }
         this.firstName = firstName;
         this.lastName = lastName;
-        this.contactKey = contactKey;
+        this.email = email;
+        this.phoneNo = phoneNo;
     }
     return Contact;
 }());
